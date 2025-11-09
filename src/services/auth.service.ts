@@ -137,25 +137,38 @@ export class AuthService {
   }
 
   /**
-   * Escuchar cambios de autenticación
+   * Listen for authentication changes
    */
   static onAuthStateChange(callback: (user: User | null) => void): {
     data: { subscription: { unsubscribe: () => void } };
   } {
-    const { data } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (session?.user) {
-          try {
-            const profile = await this.getUserProfile(session.user.id);
-            callback(profile);
-          } catch (error) {
-            callback(null);
-          }
-        } else {
-          callback(null);
-        }
+    const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Only clear user on explicit SIGNED_OUT event
+      if (event === "SIGNED_OUT") {
+        callback(null);
+        return;
       }
-    );
+
+      if (session?.user) {
+        try {
+          const profile = await this.getUserProfile(session.user.id);
+          callback(profile);
+        } catch (error) {
+          // Don't clear user on profile fetch errors
+          // Keep the current session active
+          // Only log the error for debugging
+          if (import.meta.env.DEV) {
+            console.warn(
+              "Failed to fetch user profile during auth state change:",
+              error
+            );
+          }
+        }
+      } else if (event === "INITIAL_SESSION" && !session) {
+        // Only clear user on initial load if there's no session
+        callback(null);
+      }
+    });
 
     return { data };
   }

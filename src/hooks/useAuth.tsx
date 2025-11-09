@@ -104,7 +104,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Listen for auth changes
     const { data } = AuthService.onAuthStateChange((profile) => {
       if (mounted) {
-        setUser(profile);
+        // Only update user if profile is not null
+        // This prevents clearing the user on token refresh or profile fetch errors
+        if (profile !== null) {
+          setUser(profile);
+        } else {
+          // Only clear user if explicitly signed out
+          setUser(null);
+        }
       }
     });
 
@@ -115,57 +122,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    const { user: authUser } = await AuthService.signIn(email, password);
+
+    if (!authUser) {
+      throw new Error("Could not authenticate user");
+    }
+
+    // Try to get user profile with timeout
     try {
-      const { user: authUser } = await AuthService.signIn(email, password);
+      const profilePromise = AuthService.getUserProfile(authUser.id);
+      const timeoutPromise = new Promise(
+        (_, reject) =>
+          setTimeout(() => reject(new Error("Timeout getting profile")), 2000) // 2 seconds
+      );
 
-      if (!authUser) {
-        throw new Error("Could not authenticate user");
-      }
+      const profile = (await Promise.race([
+        profilePromise,
+        timeoutPromise,
+      ])) as User;
 
-      // Try to get user profile with timeout
-      try {
-        const profilePromise = AuthService.getUserProfile(authUser.id);
-        const timeoutPromise = new Promise(
-          (_, reject) =>
-            setTimeout(() => reject(new Error("Timeout getting profile")), 2000) // 2 seconds
-        );
+      setUser(profile);
+    } catch (profileError) {
+      // Create profile from user_metadata (without saving to DB)
+      const userMetadata = authUser.user_metadata || {};
+      const fallbackProfile: User = {
+        id_usuario: authUser.id,
+        nombre:
+          userMetadata.nombre || authUser.email?.split("@")[0] || "Usuario",
+        apellido: userMetadata.apellido || "",
+        telefono: userMetadata.telefono || "",
+        rol: (userMetadata.role || "cliente") as UserRole,
+        activo: true,
+      };
 
-        const profile = (await Promise.race([
-          profilePromise,
-          timeoutPromise,
-        ])) as User;
+      // Try to create in DB (without waiting)
+      supabase
+        .from("usuarios")
+        .upsert(fallbackProfile, { onConflict: "id_usuario" })
+        .select()
+        .single()
+        .then(({ data, error }) => {
+          if (!error && data) {
+            setUser(data);
+          }
+        });
 
-        setUser(profile);
-      } catch (profileError) {
-        // Create profile from user_metadata (without saving to DB)
-        const userMetadata = authUser.user_metadata || {};
-        const fallbackProfile: User = {
-          id_usuario: authUser.id,
-          nombre:
-            userMetadata.nombre || authUser.email?.split("@")[0] || "Usuario",
-          apellido: userMetadata.apellido || "",
-          telefono: userMetadata.telefono || "",
-          rol: (userMetadata.role || "cliente") as UserRole,
-          activo: true,
-        };
-
-        // Try to create in DB (without waiting)
-        supabase
-          .from("usuarios")
-          .upsert(fallbackProfile, { onConflict: "id_usuario" })
-          .select()
-          .single()
-          .then(({ data, error }) => {
-            if (!error && data) {
-              setUser(data);
-            }
-          });
-
-        // Use fallback profile immediately
-        setUser(fallbackProfile);
-      }
-    } catch (error) {
-      throw error;
+      // Use fallback profile immediately
+      setUser(fallbackProfile);
     }
   };
 
