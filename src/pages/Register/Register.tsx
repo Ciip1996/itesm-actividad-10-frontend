@@ -8,10 +8,12 @@ import { handleError } from "@utils/error.utils";
 import { UserRole } from "@/types";
 import "./Register.scss";
 import { useAuth } from "@/hooks";
+import { useLanguage } from "@/i18n";
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const { signUp } = useAuth();
+  const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -37,7 +39,7 @@ export const Register: React.FC = () => {
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden");
+      setError(t.register.passwordMismatch);
       return;
     }
 
@@ -63,10 +65,8 @@ export const Register: React.FC = () => {
       <div className="container">
         <div className="register__wrapper">
           <Card className="register__card" padding="lg" shadow="lg">
-            <h1 className="register__title">Crear Cuenta</h1>
-            <p className="register__subtitle">
-              Regístrate para comenzar a hacer reservaciones
-            </p>
+            <h1 className="register__title">{t.register.title}</h1>
+            <p className="register__subtitle">{t.register.subtitle}</p>
 
             {error && (
               <Alert variant="error" onClose={() => setError(null)}>
@@ -77,7 +77,7 @@ export const Register: React.FC = () => {
             <form onSubmit={handleSubmit} className="register__form">
               <div className="register__form-row">
                 <TextField
-                  label="Nombre"
+                  label={t.register.firstName}
                   type="text"
                   name="nombre"
                   id="nombre"
@@ -86,7 +86,7 @@ export const Register: React.FC = () => {
                   required
                 />
                 <TextField
-                  label="Apellido"
+                  label={t.register.lastName}
                   type="text"
                   name="apellido"
                   id="apellido"
@@ -97,18 +97,18 @@ export const Register: React.FC = () => {
               </div>
 
               <TextField
-                label="Teléfono"
+                label={t.register.phone}
                 type="tel"
                 name="telefono"
                 id="telefono"
                 value={formData.telefono}
                 onChange={handleChange}
                 required
-                placeholder="10 dígitos"
+                placeholder={t.register.phonePlaceholder}
               />
 
               <TextField
-                label="Correo Electrónico"
+                label={t.register.email}
                 type="email"
                 name="email"
                 id="email"
@@ -119,7 +119,7 @@ export const Register: React.FC = () => {
               />
 
               <TextField
-                label="Contraseña"
+                label={t.register.password}
                 type="password"
                 name="password"
                 id="password"
@@ -127,11 +127,11 @@ export const Register: React.FC = () => {
                 onChange={handleChange}
                 required
                 autoComplete="new-password"
-                placeholder="Mínimo 6 caracteres"
+                placeholder={t.register.passwordPlaceholder}
               />
 
               <TextField
-                label="Confirmar Contraseña"
+                label={t.register.confirmPassword}
                 type="password"
                 name="confirmPassword"
                 id="confirmPassword"
@@ -148,15 +148,15 @@ export const Register: React.FC = () => {
                 fullWidth
                 loading={loading}
               >
-                Registrarse
+                {t.register.submit}
               </Button>
             </form>
 
             <div className="register__footer">
               <p className="register__footer-text">
-                ¿Ya tienes cuenta?{" "}
+                {t.register.hasAccount}{" "}
                 <Link to="/login" className="register__link">
-                  Inicia sesión aquí
+                  {t.register.loginLink}
                 </Link>
               </p>
             </div>

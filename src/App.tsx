@@ -7,6 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "@hooks/useAuth";
+import { LanguageProvider } from "@/i18n";
 import { Navbar } from "@/components/organisms";
 import { PublicRoute } from "@/components/PublicRoute";
 import { Home } from "@pages/Home";
@@ -104,11 +105,13 @@ const AppRoutes: React.FC = () => {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <div className="app">
-          <AppRoutes />
-        </div>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <div className="app">
+            <AppRoutes />
+          </div>
+        </AuthProvider>
+      </LanguageProvider>
     </BrowserRouter>
   );
 }

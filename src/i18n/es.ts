@@ -1,0 +1,139 @@
+import type { Translations } from "./types";
+
+export const es: Translations = {
+  navbar: {
+    brand: "Reservaciones",
+    home: "Inicio",
+    myReservations: "Mis Reservaciones",
+    newReservation: "Nueva Reservación",
+    login: "Iniciar Sesión",
+    register: "Registrarse",
+    logout: "Cerrar Sesión",
+    role: "Rol",
+  },
+
+  home: {
+    title: "Sistema de Reservaciones",
+    subtitle: "Reserva tu mesa de manera fácil y rápida en nuestro restaurante",
+    newReservation: "Nueva Reservación",
+    login: "Iniciar Sesión",
+    register: "Registrarse",
+    whyReserve: "¿Por qué reservar con nosotros?",
+    feature1Title: "Reserva Instantánea",
+    feature1Description:
+      "Confirma tu reservación en segundos y recibe notificaciones inmediatas",
+    feature2Title: "Gestión Fácil",
+    feature2Description:
+      "Administra tus reservaciones desde cualquier dispositivo",
+    feature3Title: "Sin Complicaciones",
+    feature3Description:
+      "Proceso simple y rápido, sin necesidad de llamadas telefónicas",
+    ctaTitle: "¿Listo para reservar?",
+    ctaDescription:
+      "Únete a miles de clientes satisfechos que disfrutan de una experiencia sin complicaciones",
+    makeReservation: "Hacer una Reservación",
+    startNow: "Comenzar Ahora",
+  },
+
+  login: {
+    title: "Iniciar Sesión",
+    subtitle: "Ingresa tus credenciales para acceder a tu cuenta",
+    email: "Correo Electrónico",
+    password: "Contraseña",
+    submit: "Iniciar Sesión",
+    noAccount: "¿No tienes cuenta?",
+    registerHere: "Regístrate aquí",
+  },
+
+  register: {
+    title: "Crear Cuenta",
+    subtitle: "Regístrate para comenzar a hacer reservaciones",
+    firstName: "Nombre",
+    lastName: "Apellido",
+    email: "Correo Electrónico",
+    phone: "Teléfono",
+    phonePlaceholder: "10 dígitos",
+    password: "Contraseña",
+    passwordPlaceholder: "Mínimo 6 caracteres",
+    confirmPassword: "Confirmar Contraseña",
+    passwordMismatch: "Las contraseñas no coinciden",
+    submit: "Registrarse",
+    hasAccount: "¿Ya tienes cuenta?",
+    loginLink: "Inicia sesión aquí",
+    haveAccount: "¿Ya tienes cuenta?",
+    loginHere: "Inicia sesión aquí",
+  },
+
+  reservations: {
+    title: "Mis Reservaciones",
+    empty: "No tienes reservaciones.",
+    loading: "Cargando...",
+    status: {
+      pending: "Pendiente",
+      confirmed: "Confirmada",
+      cancelled: "Cancelada",
+    },
+    date: "Fecha",
+    time: "Hora",
+    guests: "Personas",
+    folio: "Folio",
+    viewDetails: "Ver detalles",
+    cancelButton: "Cancelar",
+    confirmCancel: "¿Estás seguro de cancelar esta reservación?",
+    cancelError: "Error al cancelar la reservación",
+  },
+
+  newReservation: {
+    title: "Nueva Reservación",
+    step1Title: "Paso 1: Selecciona fecha y personas",
+    step2Title: "Paso 2: Completa la información",
+    date: "Fecha",
+    guests: "Número de personas",
+    selectDate: "Selecciona una fecha",
+    selectGuests: "Número de personas",
+    checkAvailability: "Ver Disponibilidad",
+    back: "← Volver",
+    timeSlot: "Horario disponible",
+    selectTime: "Selecciona un horario",
+    fullName: "Nombre completo",
+    email: "Correo electrónico",
+    phone: "Teléfono",
+    specialNotes: "Notas especiales (opcional)",
+    notesPlaceholder: "Alergias, preferencias de mesa, etc.",
+    confirm: "Confirmar Reservación",
+    successMessage: "¡Reservación creada exitosamente! Tu folio es:",
+    availableSlots: "Horarios Disponibles",
+    noAvailability:
+      "No hay horarios disponibles para esta fecha y cantidad de personas",
+    guestInfo: "Información del Cliente",
+    name: "Nombre completo",
+    notes: "Notas (opcional)",
+    submit: "Confirmar Reservación",
+    success: "¡Reservación creada exitosamente!",
+    error: "Error al crear la reservación",
+    loading: "Creando reservación...",
+  },
+
+  userMenu: {
+    role: "Rol",
+    logout: "Cerrar Sesión",
+  },
+
+  common: {
+    loading: "Cargando...",
+    error: "Error",
+    success: "Éxito",
+    cancel: "Cancelar",
+    confirm: "Confirmar",
+    save: "Guardar",
+    close: "Cerrar",
+  },
+
+  errors: {
+    required: "Este campo es requerido",
+    invalidEmail: "Correo electrónico inválido",
+    passwordMismatch: "Las contraseñas no coinciden",
+    minLength: "Mínimo {min} caracteres",
+    maxLength: "Máximo {max} caracteres",
+  },
+};

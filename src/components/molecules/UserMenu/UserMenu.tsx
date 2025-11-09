@@ -4,10 +4,12 @@ import { Avatar } from "@atoms/Avatar";
 import { Button } from "@atoms/Button";
 import { useAuth } from "@/hooks";
 import { ROUTES } from "@config/index";
+import { useLanguage } from "@/i18n";
 import "./UserMenu.scss";
 
 export const UserMenu: React.FC = () => {
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -82,7 +84,9 @@ export const UserMenu: React.FC = () => {
             <div className="user-menu__header-info">
               <p className="user-menu__header-name">{fullName}</p>
               <p className="user-menu__header-phone">{user.telefono}</p>
-              <p className="user-menu__header-role">Rol: {user.rol}</p>
+              <p className="user-menu__header-role">
+                {t.userMenu.role}: {user.rol}
+              </p>
             </div>
           </div>
 
@@ -90,7 +94,7 @@ export const UserMenu: React.FC = () => {
 
           <div className="user-menu__actions">
             <Button variant="error" size="sm" fullWidth onClick={handleSignOut}>
-              Cerrar Sesión
+              {t.userMenu.logout}
             </Button>
           </div>
         </div>

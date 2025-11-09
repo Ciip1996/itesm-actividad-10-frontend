@@ -4,6 +4,7 @@ import { Badge } from "@atoms/Badge";
 import { Button } from "@atoms/Button";
 import type { Reservation, ReservationStatus } from "@/types";
 import { formatDate, formatTime } from "@utils/date.utils";
+import { useLanguage } from "@/i18n";
 import "./ReservationCard.scss";
 
 export interface ReservationCardProps {
@@ -21,26 +22,28 @@ const getStatusVariant = (status: ReservationStatus) => {
   return variants[status] || ("info" as const);
 };
 
-const getStatusLabel = (status: ReservationStatus) => {
-  const labels = {
-    confirmada: "Confirmada",
-    pendiente: "Pendiente",
-    cancelada: "Cancelada",
-  };
-  return labels[status] || status;
-};
-
 export const ReservationCard: React.FC<ReservationCardProps> = ({
   reservation,
   onCancel,
   onViewDetails,
 }) => {
+  const { t } = useLanguage();
+
+  const getStatusLabel = (status: ReservationStatus) => {
+    const labels = {
+      confirmada: t.reservations.status.confirmed,
+      pendiente: t.reservations.status.pending,
+      cancelada: t.reservations.status.cancelled,
+    };
+    return labels[status] || status;
+  };
+
   return (
     <Card className="reservation-card" padding="md" shadow="sm" hover>
       <div className="reservation-card__header">
         <div>
           <h3 className="reservation-card__folio">
-            Folio: {reservation.folio}
+            {t.reservations.folio}: {reservation.folio}
           </h3>
           <p className="reservation-card__date">
             {formatDate(reservation.fecha)} - {formatTime(reservation.hora)}
@@ -53,14 +56,18 @@ export const ReservationCard: React.FC<ReservationCardProps> = ({
 
       <div className="reservation-card__body">
         <div className="reservation-card__info">
-          <span className="reservation-card__label">Personas:</span>
+          <span className="reservation-card__label">
+            {t.reservations.guests}:
+          </span>
           <span className="reservation-card__value">
             {reservation.personas}
           </span>
         </div>
         {reservation.notas && (
           <div className="reservation-card__info">
-            <span className="reservation-card__label">Notas:</span>
+            <span className="reservation-card__label">
+              {t.newReservation.notes}:
+            </span>
             <span className="reservation-card__value">{reservation.notas}</span>
           </div>
         )}
@@ -73,7 +80,7 @@ export const ReservationCard: React.FC<ReservationCardProps> = ({
             size="sm"
             onClick={() => onViewDetails(reservation.id_reserva)}
           >
-            Ver detalles
+            {t.reservations.viewDetails}
           </Button>
         )}
         {onCancel && reservation.estado !== "cancelada" && (
@@ -82,7 +89,7 @@ export const ReservationCard: React.FC<ReservationCardProps> = ({
             size="sm"
             onClick={() => onCancel(reservation.id_reserva)}
           >
-            Cancelar
+            {t.reservations.cancelButton}
           </Button>
         )}
       </div>

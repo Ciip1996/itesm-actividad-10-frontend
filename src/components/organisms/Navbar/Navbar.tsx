@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@atoms/Button";
+import { LanguageSwitch } from "@atoms/LanguageSwitch";
 import { UserMenu } from "@molecules/UserMenu";
 import { useAuth } from "@/hooks";
+import { useLanguage } from "@/i18n";
 import { ROUTES } from "@config/index";
 import "./Navbar.scss";
 
 export const Navbar: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
+  const { t } = useLanguage();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -46,7 +49,7 @@ export const Navbar: React.FC = () => {
                 fill="currentColor"
               />
             </svg>
-            <span className="navbar__brand">Reservaciones</span>
+            <span className="navbar__brand">{t.navbar.brand}</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -58,7 +61,7 @@ export const Navbar: React.FC = () => {
                   isActive(ROUTES.HOME) ? "navbar__link--active" : ""
                 }`}
               >
-                Inicio
+                {t.navbar.home}
               </Link>
               <Link
                 to={ROUTES.RESERVATIONS}
@@ -66,7 +69,7 @@ export const Navbar: React.FC = () => {
                   isActive(ROUTES.RESERVATIONS) ? "navbar__link--active" : ""
                 }`}
               >
-                Mis Reservaciones
+                {t.navbar.myReservations}
               </Link>
               <Link
                 to={ROUTES.NEW_RESERVATION}
@@ -74,13 +77,14 @@ export const Navbar: React.FC = () => {
                   isActive(ROUTES.NEW_RESERVATION) ? "navbar__link--active" : ""
                 }`}
               >
-                Nueva Reservación
+                {t.navbar.newReservation}
               </Link>
             </div>
           )}
 
           {/* Desktop Actions */}
           <div className="navbar__actions navbar__actions--desktop">
+            <LanguageSwitch />
             {loading ? (
               <div className="navbar__skeleton">
                 <div className="navbar__skeleton-avatar"></div>
@@ -95,12 +99,12 @@ export const Navbar: React.FC = () => {
               <>
                 <Link to={ROUTES.LOGIN}>
                   <Button variant="ghost" size="sm">
-                    Iniciar Sesión
+                    {t.navbar.login}
                   </Button>
                 </Link>
                 <Link to={ROUTES.REGISTER}>
                   <Button variant="primary" size="sm">
-                    Registrarse
+                    {t.navbar.register}
                   </Button>
                 </Link>
               </>
@@ -142,7 +146,7 @@ export const Navbar: React.FC = () => {
                   }`}
                   onClick={closeMobileMenu}
                 >
-                  Inicio
+                  {t.navbar.home}
                 </Link>
                 <Link
                   to={ROUTES.RESERVATIONS}
@@ -153,7 +157,7 @@ export const Navbar: React.FC = () => {
                   }`}
                   onClick={closeMobileMenu}
                 >
-                  Mis Reservaciones
+                  {t.navbar.myReservations}
                 </Link>
                 <Link
                   to={ROUTES.NEW_RESERVATION}
@@ -164,7 +168,7 @@ export const Navbar: React.FC = () => {
                   }`}
                   onClick={closeMobileMenu}
                 >
-                  Nueva Reservación
+                  {t.navbar.newReservation}
                 </Link>
                 <div className="navbar__mobile-divider" />
                 <UserMenu />
@@ -173,12 +177,12 @@ export const Navbar: React.FC = () => {
               <div className="navbar__mobile-actions">
                 <Link to={ROUTES.LOGIN} onClick={closeMobileMenu}>
                   <Button variant="ghost" size="md" fullWidth>
-                    Iniciar Sesión
+                    {t.navbar.login}
                   </Button>
                 </Link>
                 <Link to={ROUTES.REGISTER} onClick={closeMobileMenu}>
                   <Button variant="primary" size="md" fullWidth>
-                    Registrarse
+                    {t.navbar.register}
                   </Button>
                 </Link>
               </div>

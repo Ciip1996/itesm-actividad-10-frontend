@@ -5,6 +5,7 @@ import { Button } from "@atoms/Button";
 import { Alert } from "@atoms/Alert";
 import { TextField } from "@molecules/FormField";
 import { useAuth } from "@hooks/useAuth";
+import { useLanguage } from "@/i18n";
 import { handleError } from "@utils/error.utils";
 import "./Login.scss";
 
@@ -12,6 +13,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn } = useAuth();
+  const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -58,10 +60,8 @@ export const Login: React.FC = () => {
       <div className="container">
         <div className="login__wrapper">
           <Card className="login__card" padding="lg" shadow="lg">
-            <h1 className="login__title">Iniciar Sesión</h1>
-            <p className="login__subtitle">
-              Ingresa tus credenciales para acceder a tu cuenta
-            </p>
+            <h1 className="login__title">{t.login.title}</h1>
+            <p className="login__subtitle">{t.login.subtitle}</p>
 
             {error && (
               <Alert variant="error" onClose={() => setError(null)}>
@@ -71,7 +71,7 @@ export const Login: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="login__form">
               <TextField
-                label="Correo Electrónico"
+                label={t.login.email}
                 type="email"
                 name="email"
                 id="email"
@@ -82,7 +82,7 @@ export const Login: React.FC = () => {
               />
 
               <TextField
-                label="Contraseña"
+                label={t.login.password}
                 type="password"
                 name="password"
                 id="password"
@@ -99,15 +99,15 @@ export const Login: React.FC = () => {
                 fullWidth
                 loading={loading}
               >
-                Iniciar Sesión
+                {t.login.submit}
               </Button>
             </form>
 
             <div className="login__footer">
               <p className="login__footer-text">
-                ¿No tienes cuenta?{" "}
+                {t.login.noAccount}{" "}
                 <Link to="/register" className="login__link">
-                  Regístrate aquí
+                  {t.login.registerHere}
                 </Link>
               </p>
             </div>

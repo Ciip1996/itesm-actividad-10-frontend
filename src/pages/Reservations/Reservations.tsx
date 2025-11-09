@@ -6,10 +6,12 @@ import { ReservationCard } from "@molecules/ReservationCard";
 import { useAuth } from "@hooks/useAuth";
 import { useReservations } from "@hooks/useReservations";
 import type { Reservation } from "@/types";
+import { useLanguage } from "@/i18n";
 import "./Reservations.scss";
 
 export const Reservations: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { getUserReservations, cancelReservation, loading, error } =
     useReservations();
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -33,13 +35,13 @@ export const Reservations: React.FC = () => {
   };
 
   const handleCancel = async (id: number) => {
-    if (!confirm("¿Estás seguro de cancelar esta reservación?")) return;
+    if (!confirm(t.reservations.confirmCancel)) return;
 
     try {
       await cancelReservation(id);
       await loadReservations();
     } catch (err) {
-      setCancelError("Error al cancelar la reservación");
+      setCancelError(t.reservations.cancelError);
     }
   };
 
@@ -59,7 +61,7 @@ export const Reservations: React.FC = () => {
     <div className="reservations">
       <div className="container">
         <div className="reservations__header">
-          <h1 className="reservations__title">Mis Reservaciones</h1>
+          <h1 className="reservations__title">{t.reservations.title}</h1>
         </div>
 
         {error && <Alert variant="error">{error}</Alert>}
@@ -72,7 +74,7 @@ export const Reservations: React.FC = () => {
         {reservations.length === 0 ? (
           <Card padding="lg">
             <div className="reservations__empty">
-              <p>No tienes reservaciones.</p>
+              <p>{t.reservations.empty}</p>
             </div>
           </Card>
         ) : (

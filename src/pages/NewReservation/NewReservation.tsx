@@ -11,10 +11,12 @@ import { getToday, addDaysToDate } from "@utils/date.utils";
 import { APP_CONFIG } from "@config/index";
 import "./NewReservation.scss";
 import { useAuth } from "@/hooks";
+import { useLanguage } from "@/i18n";
 
 export const NewReservation: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { createReservation, checkAvailability, loading, error } =
     useReservations();
 
@@ -61,9 +63,7 @@ export const NewReservation: React.FC = () => {
 
     try {
       const result = await createReservation(formData);
-      setSuccessMessage(
-        `¡Reservación creada exitosamente! Tu folio es: ${result.folio}`
-      );
+      setSuccessMessage(`${t.newReservation.successMessage} ${result.folio}`);
 
       setTimeout(() => {
         navigate("/reservations");
@@ -80,7 +80,7 @@ export const NewReservation: React.FC = () => {
       <div className="container">
         <div className="new-reservation__wrapper">
           <Card className="new-reservation__card" padding="lg" shadow="lg">
-            <h1 className="new-reservation__title">Nueva Reservación</h1>
+            <h1 className="new-reservation__title">{t.newReservation.title}</h1>
 
             {error && <Alert variant="error">{error}</Alert>}
             {successMessage && (
@@ -90,10 +90,10 @@ export const NewReservation: React.FC = () => {
             {step === 1 ? (
               <div className="new-reservation__step">
                 <h2 className="new-reservation__step-title">
-                  Paso 1: Selecciona fecha y personas
+                  {t.newReservation.step1Title}
                 </h2>
 
-                <FormField label="Fecha" required>
+                <FormField label={t.newReservation.date} required>
                   <Input
                     type="date"
                     name="fecha"
@@ -105,7 +105,7 @@ export const NewReservation: React.FC = () => {
                   />
                 </FormField>
 
-                <FormField label="Número de personas" required>
+                <FormField label={t.newReservation.guests} required>
                   <Input
                     type="number"
                     name="numero_personas"
@@ -124,13 +124,13 @@ export const NewReservation: React.FC = () => {
                   onClick={handleCheckAvailability}
                   loading={loading}
                 >
-                  Ver Disponibilidad
+                  {t.newReservation.checkAvailability}
                 </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="new-reservation__step">
                 <h2 className="new-reservation__step-title">
-                  Paso 2: Completa la información
+                  {t.newReservation.step2Title}
                 </h2>
 
                 <Button
@@ -139,10 +139,10 @@ export const NewReservation: React.FC = () => {
                   size="sm"
                   onClick={() => setStep(1)}
                 >
-                  ← Volver
+                  {t.newReservation.back}
                 </Button>
 
-                <FormField label="Horario disponible" required>
+                <FormField label={t.newReservation.timeSlot} required>
                   <select
                     name="hora"
                     value={formData.hora}
@@ -150,7 +150,7 @@ export const NewReservation: React.FC = () => {
                     className="new-reservation__select"
                     required
                   >
-                    <option value="">Selecciona un horario</option>
+                    <option value="">{t.newReservation.selectTime}</option>
                     {availableSlots.map((hora) => (
                       <option key={hora} value={hora}>
                         {hora}
@@ -160,7 +160,7 @@ export const NewReservation: React.FC = () => {
                 </FormField>
 
                 <TextField
-                  label="Nombre completo"
+                  label={t.newReservation.fullName}
                   type="text"
                   name="nombre_cliente"
                   value={formData.nombre_cliente}
@@ -169,7 +169,7 @@ export const NewReservation: React.FC = () => {
                 />
 
                 <TextField
-                  label="Correo electrónico"
+                  label={t.newReservation.email}
                   type="email"
                   name="email_cliente"
                   value={formData.email_cliente}
@@ -178,7 +178,7 @@ export const NewReservation: React.FC = () => {
                 />
 
                 <TextField
-                  label="Teléfono"
+                  label={t.newReservation.phone}
                   type="tel"
                   name="telefono_cliente"
                   value={formData.telefono_cliente}
@@ -186,14 +186,14 @@ export const NewReservation: React.FC = () => {
                   required
                 />
 
-                <FormField label="Notas especiales (opcional)">
+                <FormField label={t.newReservation.specialNotes}>
                   <textarea
                     name="notas"
                     value={formData.notas}
                     onChange={handleChange}
                     className="new-reservation__textarea"
                     rows={4}
-                    placeholder="Alergias, preferencias de mesa, etc."
+                    placeholder={t.newReservation.notesPlaceholder}
                   />
                 </FormField>
 
@@ -204,7 +204,7 @@ export const NewReservation: React.FC = () => {
                   fullWidth
                   loading={loading}
                 >
-                  Confirmar Reservación
+                  {t.newReservation.confirm}
                 </Button>
               </form>
             )}
