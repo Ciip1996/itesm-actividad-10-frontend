@@ -59,20 +59,15 @@ export class AuthService {
    * Iniciar sesión
    */
   static async signIn(email: string, password: string) {
-    console.log("🟡 AuthService.signIn - Iniciando con:", email);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    console.log("🟡 AuthService.signIn - Respuesta:", { data, error });
-
     if (error) {
-      console.error("❌ AuthService.signIn - Error:", error);
       throw error;
     }
 
-    console.log("✅ AuthService.signIn - Exitoso");
     return data;
   }
 
@@ -100,8 +95,6 @@ export class AuthService {
    * Obtener perfil de usuario
    */
   static async getUserProfile(userId: string): Promise<User> {
-    console.log("🟡 AuthService.getUserProfile - Buscando userId:", userId);
-
     try {
       const { data, error } = await Promise.race([
         supabase.from("usuarios").select("*").eq("id_usuario", userId).single(),
@@ -114,25 +107,16 @@ export class AuthService {
         ),
       ]);
 
-      console.log("🟡 AuthService.getUserProfile - Respuesta:", {
-        data,
-        error,
-      });
-
       if (error) {
-        console.error("❌ Error fetching user profile:", error);
         throw new Error(`Error al obtener perfil: ${error.message}`);
       }
 
       if (!data) {
-        console.error("❌ Perfil de usuario no encontrado");
         throw new Error("Perfil de usuario no encontrado");
       }
 
-      console.log("✅ Perfil encontrado:", data);
       return data;
     } catch (err) {
-      console.error("❌ Exception en getUserProfile:", err);
       throw err;
     }
   }
@@ -154,19 +138,24 @@ export class AuthService {
   /**
    * Escuchar cambios de autenticación
    */
-  static onAuthStateChange(callback: (user: User | null) => void) {
-    return supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        try {
-          const profile = await this.getUserProfile(session.user.id);
-          callback(profile);
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
+  static onAuthStateChange(callback: (user: User | null) => void): {
+    data: { subscription: { unsubscribe: () => void } };
+  } {
+    const { data } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        if (session?.user) {
+          try {
+            const profile = await this.getUserProfile(session.user.id);
+            callback(profile);
+          } catch (error) {
+            callback(null);
+          }
+        } else {
           callback(null);
         }
-      } else {
-        callback(null);
       }
-    });
+    );
+
+    return { data };
   }
 }

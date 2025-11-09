@@ -23,7 +23,9 @@ export const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Obtener la ruta a la que intentaba acceder antes del login
-  const locationState = location.state as { from?: { pathname: string } } | null;
+  const locationState = location.state as {
+    from?: { pathname: string };
+  } | null;
   const from = locationState?.from?.pathname || "/reservations";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,20 +40,14 @@ export const Login: React.FC = () => {
     setError(null);
     setLoading(true);
 
-    console.log("🔵 Iniciando proceso de login...");
-
     try {
-      console.log("🔵 Llamando a signIn...");
       await signIn(formData.email, formData.password);
-      console.log("✅ signIn completado exitosamente");
       // Redirigir a la página a la que intentaba acceder o a reservations por defecto
       navigate(from, { replace: true });
     } catch (err) {
-      console.error("❌ Error en handleSubmit:", err);
       setError(handleError(err));
       setLoading(false);
     } finally {
-      console.log("🔵 Finally ejecutado, loading:", false);
       setLoading(false);
     }
   };

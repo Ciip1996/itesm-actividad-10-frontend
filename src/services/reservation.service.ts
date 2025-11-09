@@ -82,8 +82,6 @@ export class ReservationService {
    * Obtener reservaciones del usuario
    */
   static async getUserReservations(userId: string): Promise<Reservation[]> {
-    console.log("🟡 ReservationService.getUserReservations - userId:", userId);
-
     try {
       const { supabase } = await import("./supabase");
 
@@ -105,17 +103,12 @@ export class ReservationService {
         timeoutPromise,
       ]);
 
-      console.log("🟡 getUserReservations - Respuesta:", { data, error });
-
       if (error) {
-        console.error("❌ Error obteniendo reservaciones:", error);
         throw error;
       }
 
-      console.log("✅ Reservaciones obtenidas:", data?.length || 0);
       return data || [];
     } catch (err) {
-      console.error("❌ Exception en getUserReservations:", err);
       // Retornar array vacío en caso de error
       return [];
     }
@@ -160,8 +153,6 @@ export class ReservationService {
     reservationId: number,
     motivo?: string
   ): Promise<Reservation> {
-    console.log("🟡 ReservationService.cancelReservation - id:", reservationId);
-
     try {
       const { supabase } = await import("./supabase");
 
@@ -187,17 +178,12 @@ export class ReservationService {
         timeoutPromise,
       ]);
 
-      console.log("🟡 cancelReservation - Respuesta:", { data, error });
-
       if (error) {
-        console.error("❌ Error cancelando reservación:", error);
         throw error;
       }
 
-      console.log("✅ Reservación cancelada");
       return data;
     } catch (err) {
-      console.error("❌ Exception en cancelReservation:", err);
       throw err;
     }
   }

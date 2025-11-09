@@ -16,19 +16,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     // Check for existing session
     const initAuth = async () => {
       try {
-        console.log("🔵 Inicializando autenticación...");
-
         // Intentar obtener sesión existente
         const {
           data: { session },
         } = await supabase.auth.getSession();
 
-        if (session?.user) {
-          console.log("✅ Sesión existente encontrada:", session.user.id);
+        if (!mounted) return;
 
+        if (session?.user) {
           // Intentar obtener perfil con timeout
           try {
             const profilePromise = AuthService.getUserProfile(session.user.id);
@@ -44,10 +44,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               timeoutPromise,
             ])) as User;
 
+            if (!mounted) return;
+
+            // Actualizar user y loading en el mismo ciclo de render
             setUser(profile);
-            console.log("✅ Perfil inicial cargado");
+            setLoading(false);
           } catch (profileError) {
-            console.warn("⚠️ Error obteniendo perfil, usando fallback");
+            if (!mounted) return;
 
             // Crear perfil fallback desde metadata
             const userMetadata = session.user.user_metadata || {};
@@ -63,7 +66,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               activo: true,
             };
 
+            // Actualizar user y loading en el mismo ciclo de render
             setUser(fallbackProfile);
+            setLoading(false);
 
             // Intentar crear en DB en background
             (async () => {
@@ -74,22 +79,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                   .select()
                   .single();
 
-                if (data) {
-                  console.log("✅ Perfil guardado en DB");
+                if (data && mounted) {
                   setUser(data);
                 }
               } catch (err) {
-                console.warn("⚠️ No se pudo guardar perfil:", err);
+                // Ignorar errores en background
               }
             })();
           }
         } else {
-          console.log("ℹ️ No hay sesión activa");
+          if (mounted) {
+            setLoading(false);
+          }
         }
       } catch (error) {
-        console.error("❌ Error initializing auth:", error);
-      } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -97,34 +103,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Listen for auth changes
     const { data } = AuthService.onAuthStateChange((profile) => {
-      setUser(profile);
-      setLoading(false);
+      if (mounted) {
+        setUser(profile);
+      }
     });
 
     return () => {
+      mounted = false;
       data?.subscription?.unsubscribe();
     };
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    console.log("🟢 useAuth.signIn iniciado");
     try {
-      console.log("🟢 Llamando a AuthService.signIn...");
       const { user: authUser } = await AuthService.signIn(email, password);
-      console.log("🟢 AuthService.signIn completado:", authUser);
 
       if (!authUser) {
-        console.error("❌ No authUser recibido");
         throw new Error("No se pudo autenticar el usuario");
       }
 
-      console.log("✅ Usuario autenticado:", authUser.id);
-      console.log("📦 user_metadata:", authUser.user_metadata);
-
       // Intentar obtener el perfil del usuario con timeout
       try {
-        console.log("🟢 Obteniendo perfil de usuario...");
-
         const profilePromise = AuthService.getUserProfile(authUser.id);
         const timeoutPromise = new Promise(
           (_, reject) =>
@@ -139,15 +138,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           timeoutPromise,
         ])) as User;
 
-        console.log("✅ Perfil obtenido:", profile);
         setUser(profile);
-        console.log("✅ setUser ejecutado con perfil");
       } catch (profileError) {
-        console.error(
-          "⚠️ Error obteniendo perfil, creando desde metadata:",
-          profileError
-        );
-
         // Crear perfil desde user_metadata (sin guardar en DB)
         const userMetadata = authUser.user_metadata || {};
         const fallbackProfile: User = {
@@ -160,8 +152,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           activo: true,
         };
 
-        console.log("🟢 Usando perfil fallback:", fallbackProfile);
-
         // Intentar crear en DB (sin esperar)
         supabase
           .from("usuarios")
@@ -169,24 +159,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           .select()
           .single()
           .then(({ data, error }) => {
-            if (error) {
-              console.error(
-                "⚠️ No se pudo guardar en DB (continuando):",
-                error
-              );
-            } else {
-              console.log("✅ Perfil guardado en DB:", data);
+            if (!error && data) {
               setUser(data);
             }
           });
 
         // Usar el perfil fallback inmediatamente
         setUser(fallbackProfile);
-        console.log("✅ setUser ejecutado con perfil fallback");
       }
-      console.log("✅ signIn completado exitosamente");
     } catch (error) {
-      console.error("❌ Error en signIn:", error);
       throw error;
     }
   };

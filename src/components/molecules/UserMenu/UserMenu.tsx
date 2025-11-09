@@ -36,7 +36,7 @@ export const UserMenu: React.FC = () => {
       navigate(ROUTES.HOME);
       setIsOpen(false);
     } catch (error) {
-      console.error("Error signing out:", error);
+      // Error handling silently
     }
   };
 

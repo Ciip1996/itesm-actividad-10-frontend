@@ -9,15 +9,11 @@ interface PublicRouteProps {
 
 /**
  * Componente para rutas públicas (Login, Register)
- * Redirige a Home si el usuario ya está autenticado
+ * Redirige a Reservations si el usuario ya está autenticado
+ * El estado de loading se maneja globalmente en App.tsx
  */
 export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
-
-  // No redirigir mientras carga para evitar flash
-  if (loading) {
-    return <>{children}</>;
-  }
+  const { isAuthenticated } = useAuth();
 
   // Si ya está autenticado, redirigir a reservations
   if (isAuthenticated) {

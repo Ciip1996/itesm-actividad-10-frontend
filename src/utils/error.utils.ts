@@ -51,6 +51,5 @@ export const isAPIError = (error: unknown): error is APIError => {
  * Manejar error y retornar mensaje
  */
 export const handleError = (error: unknown): string => {
-  console.error("Error:", error);
   return getErrorMessage(error);
 };
