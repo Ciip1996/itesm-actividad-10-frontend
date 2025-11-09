@@ -93,17 +93,17 @@ export class ReservationService {
         .eq("id_usuario", userId)
         .order("fecha", { ascending: false });
 
-      const timeoutPromise = new Promise((_, reject) =>
+      const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(
           () => reject(new Error("Timeout obteniendo reservaciones")),
           5000
         )
       );
 
-      const { data, error } = (await Promise.race([
+      const { data, error } = await Promise.race([
         queryPromise,
         timeoutPromise,
-      ])) as any;
+      ]);
 
       console.log("🟡 getUserReservations - Respuesta:", { data, error });
 
@@ -175,17 +175,17 @@ export class ReservationService {
         .select()
         .single();
 
-      const timeoutPromise = new Promise((_, reject) =>
+      const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(
           () => reject(new Error("Timeout cancelando reservación")),
           5000
         )
       );
 
-      const { data, error } = (await Promise.race([
+      const { data, error } = await Promise.race([
         updatePromise,
         timeoutPromise,
-      ])) as any;
+      ]);
 
       console.log("🟡 cancelReservation - Respuesta:", { data, error });
 

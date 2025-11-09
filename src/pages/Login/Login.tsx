@@ -23,7 +23,8 @@ export const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Obtener la ruta a la que intentaba acceder antes del login
-  const from = (location.state as any)?.from?.pathname || "/reservations";
+  const locationState = location.state as { from?: { pathname: string } } | null;
+  const from = locationState?.from?.pathname || "/reservations";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({

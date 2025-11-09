@@ -103,16 +103,16 @@ export class AuthService {
     console.log("🟡 AuthService.getUserProfile - Buscando userId:", userId);
 
     try {
-      const { data, error } = (await Promise.race([
+      const { data, error } = await Promise.race([
         supabase.from("usuarios").select("*").eq("id_usuario", userId).single(),
-        new Promise((_, reject) =>
+        new Promise<never>((_, reject) =>
           setTimeout(
             () =>
               reject(new Error("Timeout: La consulta tardó más de 5 segundos")),
             5000
           )
         ),
-      ])) as any;
+      ]);
 
       console.log("🟡 AuthService.getUserProfile - Respuesta:", {
         data,
