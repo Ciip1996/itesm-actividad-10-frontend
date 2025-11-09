@@ -67,22 +67,14 @@ export const NewReservation: React.FC = () => {
   };
 
   const handleCheckAvailability = async () => {
-    console.log("🔍 Checking availability with:", {
-      fecha: formData.fecha,
-      numero_personas: formData.numero_personas,
-    });
-
     try {
       const slots = await checkAvailability({
         fecha: formData.fecha,
         numero_personas: formData.numero_personas,
       });
 
-      console.log("✅ Slots received:", slots);
-
       // Validar que slots sea un array
       if (!Array.isArray(slots)) {
-        console.error("❌ Slots is not an array:", slots);
         setAvailableSlots([]);
         setStep(2);
         return;
@@ -90,11 +82,9 @@ export const NewReservation: React.FC = () => {
 
       const available = slots.filter((s) => s.disponible).map((s) => s.hora);
 
-      console.log("✅ Available slots:", available);
       setAvailableSlots(available);
       setStep(2);
     } catch (err) {
-      console.error("❌ Error checking availability:", err);
       // Error handled by hook
     }
   };
@@ -102,9 +92,26 @@ export const NewReservation: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Asegurar que la hora esté en formato HH:MM (sin segundos)
+    // La hora viene del backend como "HH:MM:SS", necesitamos enviarla como "HH:MM"
+    const horaFormateada = formData.hora.includes(":")
+      ? formData.hora.substring(0, 5)
+      : formData.hora;
+
+    const reservationData = {
+      ...formData,
+      hora: horaFormateada,
+      numero_personas: Number(formData.numero_personas), // Asegurar que sea número
+    };
+
     try {
-      const result = await createReservation(formData);
-      setSuccessMessage(`${t.newReservation.successMessage} ${result.folio}`);
+      const result = await createReservation(reservationData);
+
+      // Manejar diferentes estructuras de respuesta
+      const folio =
+        result?.folio || result?.data?.folio || result?.reserva?.folio || "N/A";
+
+      setSuccessMessage(`${t.newReservation.successMessage} ${folio}`);
 
       setTimeout(() => {
         navigate("/reservations");

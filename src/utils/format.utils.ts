@@ -77,13 +77,13 @@ export const formatTimeToAMPM = (time: string): string => {
   const [hourStr, minuteStr] = time.split(":");
   const hour = parseInt(hourStr, 10);
   const minute = minuteStr || "00";
-  
+
   // Determinar AM/PM
   const period = hour >= 12 ? "PM" : "AM";
-  
+
   // Convertir a formato 12 horas
   const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-  
+
   // Formatear
   return `${hour12}:${minute} ${period}`;
 };

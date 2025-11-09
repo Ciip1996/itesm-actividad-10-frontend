@@ -1,8 +1,8 @@
-import { supabase } from "./supabase";
+import { supabase, clearAuthStorage } from "./supabase";
 import type { User, UserRole } from "@/types";
 
 /**
- * Servicio de autenticación
+ * Servicio de autenticación con mejores prácticas de seguridad
  */
 export class AuthService {
   /**
@@ -73,10 +73,16 @@ export class AuthService {
 
   /**
    * Cerrar sesión
+   * Limpia tanto la sesión de Supabase como el almacenamiento local
    */
   static async signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } finally {
+      // Siempre limpiar el almacenamiento local, incluso si hay error
+      clearAuthStorage();
+    }
   }
 
   /**
@@ -95,30 +101,26 @@ export class AuthService {
    * Obtener perfil de usuario
    */
   static async getUserProfile(userId: string): Promise<User> {
-    try {
-      const { data, error } = await Promise.race([
-        supabase.from("usuarios").select("*").eq("id_usuario", userId).single(),
-        new Promise<never>((_, reject) =>
-          setTimeout(
-            () =>
-              reject(new Error("Timeout: La consulta tardó más de 5 segundos")),
-            5000
-          )
-        ),
-      ]);
+    const { data, error } = await Promise.race([
+      supabase.from("usuarios").select("*").eq("id_usuario", userId).single(),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () =>
+            reject(new Error("Timeout: La consulta tardó más de 5 segundos")),
+          5000
+        )
+      ),
+    ]);
 
-      if (error) {
-        throw new Error(`Error al obtener perfil: ${error.message}`);
-      }
-
-      if (!data) {
-        throw new Error("Perfil de usuario no encontrado");
-      }
-
-      return data;
-    } catch (err) {
-      throw err;
+    if (error) {
+      throw new Error(`Error al obtener perfil: ${error.message}`);
     }
+
+    if (!data) {
+      throw new Error("Perfil de usuario no encontrado");
+    }
+
+    return data;
   }
   /**
    * Actualizar perfil de usuario

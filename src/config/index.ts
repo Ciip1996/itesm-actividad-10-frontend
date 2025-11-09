@@ -2,9 +2,22 @@
  * Configuración de Supabase
  */
 
+// Validar que las variables de entorno estén definidas
+const validateEnvVar = (value: string | undefined, name: string): string => {
+  if (!value || value.trim() === "") {
+    throw new Error(
+      `Missing required environment variable: ${name}. Please check your .env file.`
+    );
+  }
+  return value;
+};
+
 export const SUPABASE_CONFIG = {
-  url: import.meta.env.VITE_SUPABASE_URL || "",
-  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
+  url: validateEnvVar(import.meta.env.VITE_SUPABASE_URL, "VITE_SUPABASE_URL"),
+  anonKey: validateEnvVar(
+    import.meta.env.VITE_SUPABASE_ANON_KEY,
+    "VITE_SUPABASE_ANON_KEY"
+  ),
 } as const;
 
 /**

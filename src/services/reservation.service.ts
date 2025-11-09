@@ -39,9 +39,7 @@ export class ReservationService {
   static async checkAvailability(
     params: CheckAvailabilityDTO
   ): Promise<AvailabilitySlot[]> {
-    console.log("📡 Calling checkAvailability with:", params);
     const token = await this.getAuthToken();
-    console.log("🔑 Token obtained:", token ? "YES" : "NO");
 
     const response = await fetch(`${this.BASE_URL}/buscar-disponibilidad`, {
       method: "POST",
@@ -55,16 +53,12 @@ export class ReservationService {
       }),
     });
 
-    console.log("📨 Response status:", response.status);
-
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("❌ Error response:", errorText);
+      await response.text();
       throw new Error("Error checking availability");
     }
 
     const result = await response.json();
-    console.log("📦 Response data:", result);
 
     // La API devuelve horarios_disponibles, no disponibles
     if (result.data?.horarios_disponibles) {
@@ -79,7 +73,6 @@ export class ReservationService {
       );
     }
 
-    console.error("⚠️ Unexpected response structure:", result);
     return [];
   }
 
@@ -99,11 +92,18 @@ export class ReservationService {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error creating reservation");
+      const errorData = await response.json();
+
+      // Extraer mensaje de error más específico
+      const errorMessage =
+        errorData.error?.message ||
+        errorData.message ||
+        "Error creating reservation";
+      throw new Error(errorMessage);
     }
 
     const result = await response.json();
+
     return result.data;
   }
 
