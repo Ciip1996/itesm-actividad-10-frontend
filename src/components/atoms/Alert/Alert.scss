@@ -1,0 +1,54 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $border-radius-md;
+  border: $border-width-thin solid transparent;
+  font-size: $font-size-md;
+  line-height: $line-height-normal;
+
+  &--success {
+    background-color: rgba($color-success, 0.1);
+    border-color: $color-success;
+    color: $color-success-dark;
+  }
+
+  &--warning {
+    background-color: rgba($color-warning, 0.1);
+    border-color: $color-warning;
+    color: $color-warning-dark;
+  }
+
+  &--error {
+    background-color: rgba($color-error, 0.1);
+    border-color: $color-error;
+    color: $color-error-dark;
+  }
+
+  &--info {
+    background-color: rgba($color-info, 0.1);
+    border-color: $color-info;
+    color: $color-info-dark;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__close {
+    @include reset-button;
+    font-size: $font-size-2xl;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity $transition-base;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

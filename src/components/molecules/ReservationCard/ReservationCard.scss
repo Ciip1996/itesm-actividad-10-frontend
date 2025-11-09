@@ -1,0 +1,46 @@
+@import "@styles/variables.scss";
+
+.reservation-card {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: $spacing-md;
+  }
+
+  &__folio {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__date {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  &__body {
+    margin-bottom: $spacing-md;
+  }
+
+  &__info {
+    display: flex;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__label {
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+  }
+
+  &__value {
+    color: $color-text-primary;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: flex-end;
+  }
+}

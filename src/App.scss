@@ -1,0 +1,12 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.app {
+  min-height: 100vh;
+  background-color: $color-bg-secondary;
+
+  &__loading {
+    @include flex-center;
+    min-height: 100vh;
+  }
+}

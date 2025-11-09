@@ -1,0 +1,126 @@
+import { SUPABASE_CONFIG } from "@config/index";
+import type {
+  GenerateReportDTO,
+  ReportResponse,
+  DashboardStats,
+} from "@/types";
+
+/**
+ * Servicio de administración
+ */
+export class AdminService {
+  private static readonly BASE_URL = `${SUPABASE_CONFIG.url}/functions/v1`;
+
+  /**
+   * Obtener estadísticas del dashboard
+   */
+  static async getDashboardStats(
+    fecha_inicio?: string,
+    fecha_fin?: string
+  ): Promise<DashboardStats> {
+    const response = await fetch(`${this.BASE_URL}/admin-panel`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      },
+      body: JSON.stringify({
+        action: "get_dashboard_stats",
+        fecha_inicio,
+        fecha_fin,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching dashboard stats");
+    }
+
+    const result = await response.json();
+    return result.data;
+  }
+
+  /**
+   * Generar reporte con insights de IA
+   */
+  static async generateReport(
+    params: GenerateReportDTO
+  ): Promise<ReportResponse> {
+    const response = await fetch(`${this.BASE_URL}/generar-reporte`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      },
+      body: JSON.stringify(params),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error generating report");
+    }
+
+    const result = await response.json();
+    return result.data;
+  }
+
+  /**
+   * Obtener todas las reservaciones (admin)
+   */
+  static async getAllReservations(filters?: {
+    fecha_inicio?: string;
+    fecha_fin?: string;
+    estado?: string;
+  }) {
+    const { supabase } = await import("./supabase");
+
+    let query = supabase
+      .from("reservas")
+      .select("*")
+      .order("fecha", { ascending: false });
+
+    if (filters?.fecha_inicio) {
+      query = query.gte("fecha", filters.fecha_inicio);
+    }
+
+    if (filters?.fecha_fin) {
+      query = query.lte("fecha", filters.fecha_fin);
+    }
+
+    if (filters?.estado) {
+      query = query.eq("estado", filters.estado);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data;
+  }
+
+  /**
+   * Enviar notificación
+   */
+  static async sendNotification(data: {
+    tipo: "confirmacion" | "recordatorio" | "cancelacion";
+    reserva_id: number;
+    destinatario: string;
+    datos_reserva: {
+      folio: string;
+      fecha: string;
+      hora: string;
+    };
+  }) {
+    const response = await fetch(`${this.BASE_URL}/enviar-notificacion`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error sending notification");
+    }
+
+    return await response.json();
+  }
+}

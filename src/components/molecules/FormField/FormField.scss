@@ -1,0 +1,29 @@
+@import "@styles/variables.scss";
+
+.form-field {
+  margin-bottom: $spacing-lg;
+
+  &__label {
+    display: block;
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+  }
+
+  &__required {
+    color: $color-error;
+    margin-left: $spacing-xs;
+  }
+
+  &__input {
+    // Container for the input
+  }
+
+  &__error {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: $font-size-sm;
+    color: $color-error;
+  }
+}

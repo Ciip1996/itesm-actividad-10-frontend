@@ -1,0 +1,45 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: $border-radius-full;
+  white-space: nowrap;
+
+  &--primary {
+    background-color: rgba($color-primary, 0.1);
+    color: $color-primary;
+  }
+
+  &--secondary {
+    background-color: rgba($color-secondary, 0.1);
+    color: $color-secondary;
+  }
+
+  &--success {
+    background-color: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &--warning {
+    background-color: rgba($color-warning, 0.1);
+    color: $color-warning;
+  }
+
+  &--error {
+    background-color: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+
+  &--info {
+    background-color: rgba($color-info, 0.1);
+    color: $color-info;
+  }
+}

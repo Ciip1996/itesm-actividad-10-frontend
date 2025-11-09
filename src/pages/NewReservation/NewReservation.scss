@@ -1,0 +1,44 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.new-reservation {
+  min-height: calc(100vh - 80px);
+  padding: $spacing-2xl 0;
+
+  &__wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    text-align: center;
+    color: $color-primary;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__step {
+    // Steps container
+  }
+
+  &__step-title {
+    font-size: $font-size-xl;
+    color: $color-primary;
+    margin-bottom: $spacing-lg;
+  }
+
+  &__select,
+  &__textarea {
+    @include input-base;
+    width: 100%;
+  }
+
+  &__select {
+    cursor: pointer;
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: $font-family-primary;
+  }
+}

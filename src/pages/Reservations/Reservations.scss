@@ -1,0 +1,32 @@
+@import "@styles/variables.scss";
+
+.reservations {
+  min-height: calc(100vh - 80px);
+  padding: $spacing-2xl 0;
+
+  &__header {
+    margin-bottom: $spacing-xl;
+  }
+
+  &__title {
+    font-size: $font-size-3xl;
+    color: $color-primary;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: $spacing-3xl 0;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-2xl;
+    color: $color-text-secondary;
+  }
+
+  &__list {
+    display: grid;
+    gap: $spacing-lg;
+  }
+}

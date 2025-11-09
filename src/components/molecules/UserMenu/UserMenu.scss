@@ -1,0 +1,144 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.user-menu {
+  position: relative;
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus {
+      outline: 2px solid $primary-color;
+      outline-offset: 2px;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  &__name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    line-height: 1.2;
+  }
+
+  &__role {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: capitalize;
+    line-height: 1.2;
+  }
+
+  &__arrow {
+    color: white;
+    transition: transform 0.2s ease;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 280px;
+    background: white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-lg;
+    padding: 1rem;
+    z-index: 1000;
+    animation: slideDown 0.2s ease;
+
+    @include mobile {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      min-width: calc(100vw - 2rem);
+      max-width: 320px;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &__header-info {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &__header-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 0.25rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__header-phone {
+    font-size: 0.875rem;
+    color: $text-secondary;
+    margin: 0 0 0.25rem 0;
+  }
+
+  &__header-role {
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  &__divider {
+    height: 1px;
+    background: $border-color;
+    margin: 1rem 0;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

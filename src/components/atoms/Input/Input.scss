@@ -1,0 +1,30 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.input {
+  @include input-base;
+
+  &--error {
+    border-color: $color-error;
+
+    &:focus {
+      border-color: $color-error;
+      box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+    }
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  // Number input - remove spinners
+  &[type="number"] {
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.card {
+  @include card;
+
+  // Padding variants
+  &--padding-sm {
+    padding: $spacing-md;
+  }
+
+  &--padding-md {
+    padding: $spacing-lg;
+  }
+
+  &--padding-lg {
+    padding: $spacing-xl;
+  }
+
+  // Shadow variants
+  &--shadow-sm {
+    box-shadow: $shadow-sm;
+  }
+
+  &--shadow-md {
+    box-shadow: $shadow-md;
+  }
+
+  &--shadow-lg {
+    box-shadow: $shadow-lg;
+  }
+
+  // Hover effect
+  &--hover {
+    transition: transform $transition-base, box-shadow $transition-base;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+    }
+  }
+}
