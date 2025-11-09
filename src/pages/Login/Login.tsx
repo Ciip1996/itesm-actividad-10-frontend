@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@atoms/Card";
 import { Button } from "@atoms/Button";
 import { Alert } from "@atoms/Alert";
@@ -10,6 +10,7 @@ import "./Login.scss";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { signIn } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -18,6 +19,9 @@ export const Login: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Obtener la ruta a la que intentaba acceder antes del login
+  const from = (location.state as any)?.from?.pathname || "/reservations";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -37,7 +41,8 @@ export const Login: React.FC = () => {
       console.log("🔵 Llamando a signIn...");
       await signIn(formData.email, formData.password);
       console.log("✅ signIn completado exitosamente");
-      navigate("/reservations");
+      // Redirigir a la página a la que intentaba acceder o a reservations por defecto
+      navigate(from, { replace: true });
     } catch (err) {
       console.error("❌ Error en handleSubmit:", err);
       setError(handleError(err));

@@ -13,16 +13,32 @@ export class ReservationService {
   private static readonly BASE_URL = `${SUPABASE_CONFIG.url}/functions/v1`;
 
   /**
+   * Obtener el token de sesión actual del usuario autenticado
+   */
+  private static async getAuthToken(): Promise<string> {
+    const { supabase } = await import("./supabase");
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    // Si hay sesión activa, usar el token del usuario
+    // Si no, usar el anon key (para endpoints públicos)
+    return session?.access_token || SUPABASE_CONFIG.anonKey;
+  }
+
+  /**
    * Verificar disponibilidad de horarios
    */
   static async checkAvailability(
     params: CheckAvailabilityDTO
   ): Promise<AvailabilitySlot[]> {
+    const token = await this.getAuthToken();
+
     const response = await fetch(`${this.BASE_URL}/buscar-disponibilidad`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         fecha: params.fecha,
@@ -42,11 +58,13 @@ export class ReservationService {
    * Crear nueva reservación
    */
   static async createReservation(data: CreateReservationDTO) {
+    const token = await this.getAuthToken();
+
     const response = await fetch(`${this.BASE_URL}/crear-reserva`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });

@@ -19,13 +19,75 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Check for existing session
     const initAuth = async () => {
       try {
-        const currentUser = await AuthService.getCurrentUser();
-        if (currentUser) {
-          const profile = await AuthService.getUserProfile(currentUser.id);
-          setUser(profile);
+        console.log("🔵 Inicializando autenticación...");
+
+        // Intentar obtener sesión existente
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (session?.user) {
+          console.log("✅ Sesión existente encontrada:", session.user.id);
+
+          // Intentar obtener perfil con timeout
+          try {
+            const profilePromise = AuthService.getUserProfile(session.user.id);
+            const timeoutPromise = new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error("Timeout obteniendo perfil inicial")),
+                2000 // 2 segundos - optimizado para UX
+              )
+            );
+
+            const profile = (await Promise.race([
+              profilePromise,
+              timeoutPromise,
+            ])) as User;
+
+            setUser(profile);
+            console.log("✅ Perfil inicial cargado");
+          } catch (profileError) {
+            console.warn("⚠️ Error obteniendo perfil, usando fallback");
+
+            // Crear perfil fallback desde metadata
+            const userMetadata = session.user.user_metadata || {};
+            const fallbackProfile: User = {
+              id_usuario: session.user.id,
+              nombre:
+                userMetadata.nombre ||
+                session.user.email?.split("@")[0] ||
+                "Usuario",
+              apellido: userMetadata.apellido || "",
+              telefono: userMetadata.telefono || "",
+              rol: (userMetadata.role || "cliente") as UserRole,
+              activo: true,
+            };
+
+            setUser(fallbackProfile);
+
+            // Intentar crear en DB en background
+            (async () => {
+              try {
+                const { data } = await supabase
+                  .from("usuarios")
+                  .upsert(fallbackProfile, { onConflict: "id_usuario" })
+                  .select()
+                  .single();
+
+                if (data) {
+                  console.log("✅ Perfil guardado en DB");
+                  setUser(data);
+                }
+              } catch (err) {
+                console.warn("⚠️ No se pudo guardar perfil:", err);
+              }
+            })();
+          }
+        } else {
+          console.log("ℹ️ No hay sesión activa");
         }
       } catch (error) {
-        console.error("Error initializing auth:", error);
+        console.error("❌ Error initializing auth:", error);
       } finally {
         setLoading(false);
       }
@@ -36,6 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Listen for auth changes
     const { data } = AuthService.onAuthStateChange((profile) => {
       setUser(profile);
+      setLoading(false);
     });
 
     return () => {
@@ -63,8 +126,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.log("🟢 Obteniendo perfil de usuario...");
 
         const profilePromise = AuthService.getUserProfile(authUser.id);
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout obteniendo perfil")), 3000)
+        const timeoutPromise = new Promise(
+          (_, reject) =>
+            setTimeout(
+              () => reject(new Error("Timeout obteniendo perfil")),
+              2000
+            ) // 2 segundos
         );
 
         const profile = (await Promise.race([

@@ -1,7 +1,14 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { AuthProvider, useAuth } from "@hooks/useAuth";
 import { Navbar } from "@/components/organisms";
+import { PublicRoute } from "@/components/PublicRoute";
 import { Home } from "@pages/Home";
 import { Login } from "@pages/Login";
 import { Register } from "@pages/Register";
@@ -20,6 +27,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -30,7 +38,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} replace />;
+    // Guardar la ubicación a la que intentaba acceder
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
@@ -45,8 +54,24 @@ const AppRoutes: React.FC = () => {
       <Navbar />
       <Routes>
         <Route path={ROUTES.HOME} element={<Home />} />
-        <Route path={ROUTES.LOGIN} element={<Login />} />
-        <Route path={ROUTES.REGISTER} element={<Register />} />
+
+        {/* Public Routes - Redirigen a /reservations si ya está autenticado */}
+        <Route
+          path={ROUTES.LOGIN}
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path={ROUTES.REGISTER}
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
 
         {/* Protected Routes */}
         <Route

@@ -6,7 +6,7 @@ import { useAuth } from "@hooks/useAuth";
 import "./Home.scss";
 
 export const Home: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   return (
     <div className="home">
@@ -17,7 +17,13 @@ export const Home: React.FC = () => {
             Reserva tu mesa de manera fácil y rápida en nuestro restaurante
           </p>
           <div className="home__actions">
-            {isAuthenticated ? (
+            {loading ? (
+              // Skeleton de botones mientras carga la sesión
+              <div className="home__actions-skeleton">
+                <div className="home__button-skeleton"></div>
+                <div className="home__button-skeleton"></div>
+              </div>
+            ) : isAuthenticated ? (
               <Link to="/reservations/new">
                 <Button variant="primary" size="lg">
                   Nueva Reservación
@@ -79,11 +85,15 @@ export const Home: React.FC = () => {
               Únete a miles de clientes satisfechos que disfrutan de una
               experiencia sin complicaciones
             </p>
-            <Link to={isAuthenticated ? "/reservations/new" : "/register"}>
-              <Button variant="secondary" size="lg" fullWidth>
-                {isAuthenticated ? "Hacer una Reservación" : "Comenzar Ahora"}
-              </Button>
-            </Link>
+            {loading ? (
+              <div className="home__button-skeleton home__button-skeleton--full"></div>
+            ) : (
+              <Link to={isAuthenticated ? "/reservations/new" : "/register"}>
+                <Button variant="secondary" size="lg" fullWidth>
+                  {isAuthenticated ? "Hacer una Reservación" : "Comenzar Ahora"}
+                </Button>
+              </Link>
+            )}
           </Card>
         </section>
       </div>
