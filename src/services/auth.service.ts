@@ -105,8 +105,7 @@ export class AuthService {
       supabase.from("usuarios").select("*").eq("id_usuario", userId).single(),
       new Promise<never>((_, reject) =>
         setTimeout(
-          () =>
-            reject(new Error("Timeout: Query took longer than 5 seconds")),
+          () => reject(new Error("Timeout: Query took longer than 5 seconds")),
           5000
         )
       ),

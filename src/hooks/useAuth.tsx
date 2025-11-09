@@ -127,10 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profilePromise = AuthService.getUserProfile(authUser.id);
         const timeoutPromise = new Promise(
           (_, reject) =>
-            setTimeout(
-              () => reject(new Error("Timeout getting profile")),
-              2000
-            ) // 2 seconds
+            setTimeout(() => reject(new Error("Timeout getting profile")), 2000) // 2 seconds
         );
 
         const profile = (await Promise.race([

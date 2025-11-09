@@ -195,10 +195,7 @@ export class ReservationService {
       .single();
 
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(
-        () => reject(new Error("Timeout canceling reservation")),
-        5000
-      )
+      setTimeout(() => reject(new Error("Timeout canceling reservation")), 5000)
     );
 
     const { data, error } = await Promise.race([updatePromise, timeoutPromise]);
