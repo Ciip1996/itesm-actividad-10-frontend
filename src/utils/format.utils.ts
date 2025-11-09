@@ -66,3 +66,24 @@ export const toTitleCase = (text: string): string => {
     .map((word) => capitalize(word))
     .join(" ");
 };
+
+/**
+ * Formatear hora a formato AM/PM
+ * @param time - Hora en formato 24 horas (HH:mm:ss o HH:mm)
+ * @returns Hora en formato 12 horas con AM/PM
+ */
+export const formatTimeToAMPM = (time: string): string => {
+  // Extraer hora y minutos (ignorar segundos si existen)
+  const [hourStr, minuteStr] = time.split(":");
+  const hour = parseInt(hourStr, 10);
+  const minute = minuteStr || "00";
+  
+  // Determinar AM/PM
+  const period = hour >= 12 ? "PM" : "AM";
+  
+  // Convertir a formato 12 horas
+  const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+  
+  // Formatear
+  return `${hour12}:${minute} ${period}`;
+};

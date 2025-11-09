@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@atoms/Card";
 import { Button } from "@atoms/Button";
@@ -8,10 +8,12 @@ import { Input } from "@atoms/Input";
 import { FormField } from "@molecules/FormField";
 import { useReservations } from "@hooks/useReservations";
 import { getToday, addDaysToDate } from "@utils/date.utils";
+import { formatTimeToAMPM } from "@utils/format.utils";
 import { APP_CONFIG } from "@config/index";
 import "./NewReservation.scss";
 import { useAuth } from "@/hooks";
 import { useLanguage } from "@/i18n";
+import { supabase } from "@/services/supabase";
 
 export const NewReservation: React.FC = () => {
   const navigate = useNavigate();
@@ -33,6 +35,26 @@ export const NewReservation: React.FC = () => {
   });
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  // Obtener el email del usuario autenticado
+  useEffect(() => {
+    const getUserEmail = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user?.email) {
+        setFormData((prev) => ({
+          ...prev,
+          email_cliente: session.user.email || "",
+        }));
+      }
+    };
+
+    if (user) {
+      getUserEmail();
+    }
+  }, [user]);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -45,15 +67,34 @@ export const NewReservation: React.FC = () => {
   };
 
   const handleCheckAvailability = async () => {
+    console.log("🔍 Checking availability with:", {
+      fecha: formData.fecha,
+      numero_personas: formData.numero_personas,
+    });
+
     try {
       const slots = await checkAvailability({
         fecha: formData.fecha,
         numero_personas: formData.numero_personas,
       });
 
-      setAvailableSlots(slots.filter((s) => s.disponible).map((s) => s.hora));
+      console.log("✅ Slots received:", slots);
+
+      // Validar que slots sea un array
+      if (!Array.isArray(slots)) {
+        console.error("❌ Slots is not an array:", slots);
+        setAvailableSlots([]);
+        setStep(2);
+        return;
+      }
+
+      const available = slots.filter((s) => s.disponible).map((s) => s.hora);
+
+      console.log("✅ Available slots:", available);
+      setAvailableSlots(available);
       setStep(2);
     } catch (err) {
+      console.error("❌ Error checking availability:", err);
       // Error handled by hook
     }
   };
@@ -153,7 +194,7 @@ export const NewReservation: React.FC = () => {
                     <option value="">{t.newReservation.selectTime}</option>
                     {availableSlots.map((hora) => (
                       <option key={hora} value={hora}>
-                        {hora}
+                        {formatTimeToAMPM(hora)}
                       </option>
                     ))}
                   </select>

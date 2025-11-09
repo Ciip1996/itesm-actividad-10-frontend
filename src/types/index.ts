@@ -96,7 +96,9 @@ export interface AIInsight {
 export interface AvailabilitySlot {
   hora: string;
   disponible: boolean;
-  capacidad_restante: number;
+  mesas_disponibles?: number;
+  capacidad_restante?: number;
+  turno?: string;
 }
 
 /**

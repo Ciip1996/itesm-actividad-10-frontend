@@ -6,6 +6,13 @@ import type {
   Reservation,
 } from "@/types";
 
+// Tipo para la respuesta del backend
+interface BackendAvailabilitySlot {
+  hora: string;
+  turno: string;
+  mesas_disponibles: number;
+}
+
 /**
  * Servicio de reservaciones
  */
@@ -32,7 +39,9 @@ export class ReservationService {
   static async checkAvailability(
     params: CheckAvailabilityDTO
   ): Promise<AvailabilitySlot[]> {
+    console.log("📡 Calling checkAvailability with:", params);
     const token = await this.getAuthToken();
+    console.log("🔑 Token obtained:", token ? "YES" : "NO");
 
     const response = await fetch(`${this.BASE_URL}/buscar-disponibilidad`, {
       method: "POST",
@@ -46,12 +55,32 @@ export class ReservationService {
       }),
     });
 
+    console.log("📨 Response status:", response.status);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ Error response:", errorText);
       throw new Error("Error checking availability");
     }
 
     const result = await response.json();
-    return result.data.disponibles;
+    console.log("📦 Response data:", result);
+
+    // La API devuelve horarios_disponibles, no disponibles
+    if (result.data?.horarios_disponibles) {
+      // Transformar la estructura del backend al formato esperado por el frontend
+      return result.data.horarios_disponibles.map(
+        (slot: BackendAvailabilitySlot) => ({
+          hora: slot.hora,
+          disponible: slot.mesas_disponibles > 0,
+          mesas_disponibles: slot.mesas_disponibles,
+          turno: slot.turno,
+        })
+      );
+    }
+
+    console.error("⚠️ Unexpected response structure:", result);
+    return [];
   }
 
   /**
@@ -153,39 +182,32 @@ export class ReservationService {
     reservationId: number,
     motivo?: string
   ): Promise<Reservation> {
-    try {
-      const { supabase } = await import("./supabase");
+    const { supabase } = await import("./supabase");
 
-      const updatePromise = supabase
-        .from("reservas")
-        .update({
-          estado: "cancelada",
-          motivo_cancelacion: motivo,
-        })
-        .eq("id_reserva", reservationId)
-        .select()
-        .single();
+    const updatePromise = supabase
+      .from("reservas")
+      .update({
+        estado: "cancelada",
+        motivo_cancelacion: motivo,
+      })
+      .eq("id_reserva", reservationId)
+      .select()
+      .single();
 
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(
-          () => reject(new Error("Timeout cancelando reservación")),
-          5000
-        )
-      );
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(
+        () => reject(new Error("Timeout cancelando reservación")),
+        5000
+      )
+    );
 
-      const { data, error } = await Promise.race([
-        updatePromise,
-        timeoutPromise,
-      ]);
+    const { data, error } = await Promise.race([updatePromise, timeoutPromise]);
 
-      if (error) {
-        throw error;
-      }
-
-      return data;
-    } catch (err) {
-      throw err;
+    if (error) {
+      throw error;
     }
+
+    return data;
   }
 
   /**
