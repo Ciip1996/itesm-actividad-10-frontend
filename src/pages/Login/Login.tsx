@@ -6,7 +6,7 @@ import { Alert } from "@atoms/Alert";
 import { TextField } from "@molecules/FormField";
 import { useAuth } from "@hooks/useAuth";
 import { useLanguage } from "@/i18n";
-import { handleError } from "@utils/error.utils";
+import { getErrorMessage } from "@utils/error.utils";
 import "./Login.scss";
 
 export const Login: React.FC = () => {
@@ -45,7 +45,7 @@ export const Login: React.FC = () => {
       // Redirigir a la página a la que intentaba acceder o a reservations por defecto
       navigate(from, { replace: true });
     } catch (err) {
-      setError(handleError(err));
+      setError(getErrorMessage(err, t));
       setLoading(false);
     } finally {
       setLoading(false);

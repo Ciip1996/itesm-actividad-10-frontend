@@ -133,5 +133,13 @@ export const en: Translations = {
     passwordMismatch: "Passwords do not match",
     minLength: "Minimum {min} characters",
     maxLength: "Maximum {max} characters",
+    invalidCredentials: "Invalid login credentials",
+    reservationNotFound: "Reservation not found",
+    timeSlotNotAvailable: "Time slot not available",
+    userAlreadyRegistered: "User already registered",
+    emailAlreadyExists: "Email already exists",
+    networkError: "Network request failed. Check your internet connection.",
+    passwordMinLength: "Password should be at least 6 characters",
+    unexpected: "Unexpected error. Please try again.",
   },
 };

@@ -4,7 +4,7 @@ import { Card } from "@atoms/Card";
 import { Button } from "@atoms/Button";
 import { Alert } from "@atoms/Alert";
 import { TextField } from "@molecules/FormField";
-import { handleError } from "@utils/error.utils";
+import { getErrorMessage } from "@utils/error.utils";
 import { UserRole } from "@/types";
 import "./Register.scss";
 import { useAuth } from "@/hooks";
@@ -54,7 +54,7 @@ export const Register: React.FC = () => {
       });
       navigate("/reservations");
     } catch (err) {
-      setError(handleError(err));
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

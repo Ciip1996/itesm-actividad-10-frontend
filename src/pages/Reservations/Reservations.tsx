@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card } from "@atoms/Card";
 import { Spinner } from "@atoms/Spinner";
 import { Alert } from "@atoms/Alert";
@@ -13,17 +13,11 @@ export const Reservations: React.FC = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { getUserReservations, cancelReservation, loading, error } =
-    useReservations();
+    useReservations(t);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [cancelError, setCancelError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      loadReservations();
-    }
-  }, [user]);
-
-  const loadReservations = async () => {
+  const loadReservations = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -32,7 +26,13 @@ export const Reservations: React.FC = () => {
     } catch (err) {
       // Error handled by hook
     }
-  };
+  }, [user, getUserReservations]);
+
+  useEffect(() => {
+    if (user) {
+      loadReservations();
+    }
+  }, [user, loadReservations]);
 
   const handleCancel = async (id: number) => {
     if (!confirm(t.reservations.confirmCancel)) return;

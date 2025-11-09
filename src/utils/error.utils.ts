@@ -1,38 +1,51 @@
 import type { APIError } from "@/types";
 
-/**
- * Mensajes de error por defecto
- */
-const ERROR_MESSAGES: Record<string, string> = {
-  "Invalid login credentials": "Credenciales de acceso inválidas",
-  "Reservation not found": "Reservación no encontrada",
-  "Time slot not available": "Horario no disponible",
-  "User already registered": "El usuario ya está registrado",
-  "Email already exists": "El correo electrónico ya está registrado",
-  "Network request failed":
-    "Error de conexión. Verifica tu conexión a internet.",
-  "Invalid email": "Correo electrónico inválido",
-  "Password should be at least 6 characters":
-    "La contraseña debe tener al menos 6 caracteres",
+// Mapeo de mensajes de error en inglés a claves de traducción
+const ERROR_KEY_MAP: Record<string, string> = {
+  "Invalid login credentials": "invalidCredentials",
+  "Reservation not found": "reservationNotFound",
+  "Time slot not available": "timeSlotNotAvailable",
+  "User already registered": "userAlreadyRegistered",
+  "Email already exists": "emailAlreadyExists",
+  "Network request failed": "networkError",
+  "Invalid email": "invalidEmail",
+  "Password should be at least 6 characters": "passwordMinLength",
 };
 
 /**
- * Obtener mensaje de error amigable
+ * Obtener mensaje de error amigable usando i18n
+ * Nota: Esta función debe ser llamada desde componentes que tengan acceso a useLanguage
  */
-export const getErrorMessage = (error: unknown): string => {
+export const getErrorMessage = (
+  error: unknown,
+  t?: { errors: Record<string, string> }
+): string => {
+  let errorMessage = "";
+
   if (typeof error === "string") {
-    return ERROR_MESSAGES[error] || error;
+    errorMessage = error;
+  } else if (error instanceof Error) {
+    errorMessage = error.message;
+  } else if (isAPIError(error)) {
+    errorMessage = error.message;
+  } else {
+    return t?.errors.unexpected || "Error inesperado. Intenta nuevamente.";
   }
 
-  if (error instanceof Error) {
-    return ERROR_MESSAGES[error.message] || error.message;
+  // Si tenemos traducciones disponibles, usarlas
+  if (t) {
+    const errorKey = ERROR_KEY_MAP[errorMessage];
+    if (errorKey && t.errors[errorKey]) {
+      return t.errors[errorKey];
+    }
   }
 
-  if (isAPIError(error)) {
-    return ERROR_MESSAGES[error.message] || error.message;
-  }
-
-  return "Error inesperado. Intenta nuevamente.";
+  // Fallback a mensaje directo o genérico
+  return (
+    errorMessage ||
+    t?.errors.unexpected ||
+    "Error inesperado. Intenta nuevamente."
+  );
 };
 
 /**
@@ -49,6 +62,7 @@ export const isAPIError = (error: unknown): error is APIError => {
 
 /**
  * Manejar error y retornar mensaje
+ * @deprecated Usar getErrorMessage con traducciones desde componentes con useLanguage
  */
 export const handleError = (error: unknown): string => {
   return getErrorMessage(error);

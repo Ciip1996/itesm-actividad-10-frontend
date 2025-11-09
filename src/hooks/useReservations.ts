@@ -6,9 +6,9 @@ import type {
   AvailabilitySlot,
   CheckAvailabilityDTO,
 } from "@/types";
-import { handleError } from "@utils/error.utils";
+import { getErrorMessage } from "@utils/error.utils";
 
-export const useReservations = () => {
+export const useReservations = (t?: { errors: Record<string, string> }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,30 +20,33 @@ export const useReservations = () => {
         const slots = await ReservationService.checkAvailability(params);
         return slots;
       } catch (err) {
-        const errorMessage = handleError(err);
+        const errorMessage = getErrorMessage(err, t);
         setError(errorMessage);
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    []
+    [t]
   );
 
-  const createReservation = useCallback(async (data: CreateReservationDTO) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await ReservationService.createReservation(data);
-      return result;
-    } catch (err) {
-      const errorMessage = handleError(err);
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const createReservation = useCallback(
+    async (data: CreateReservationDTO) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await ReservationService.createReservation(data);
+        return result;
+      } catch (err) {
+        const errorMessage = getErrorMessage(err, t);
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [t]
+  );
 
   const getUserReservations = useCallback(
     async (userId: string): Promise<Reservation[]> => {
@@ -55,14 +58,14 @@ export const useReservations = () => {
         );
         return reservations;
       } catch (err) {
-        const errorMessage = handleError(err);
+        const errorMessage = getErrorMessage(err, t);
         setError(errorMessage);
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    []
+    [t]
   );
 
   const cancelReservation = useCallback(
@@ -76,14 +79,14 @@ export const useReservations = () => {
         );
         return result;
       } catch (err) {
-        const errorMessage = handleError(err);
+        const errorMessage = getErrorMessage(err, t);
         setError(errorMessage);
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    []
+    [t]
   );
 
   return {

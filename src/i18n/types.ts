@@ -140,5 +140,13 @@ export interface Translations {
     passwordMismatch: string;
     minLength: string;
     maxLength: string;
+    invalidCredentials: string;
+    reservationNotFound: string;
+    timeSlotNotAvailable: string;
+    userAlreadyRegistered: string;
+    emailAlreadyExists: string;
+    networkError: string;
+    passwordMinLength: string;
+    unexpected: string;
   };
 }

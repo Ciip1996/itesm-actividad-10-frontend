@@ -18,7 +18,7 @@ export const NewReservation: React.FC = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { createReservation, checkAvailability, loading, error } =
-    useReservations();
+    useReservations(t);
 
   const [step, setStep] = useState<1 | 2>(1);
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);

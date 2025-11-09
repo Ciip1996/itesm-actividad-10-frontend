@@ -135,5 +135,13 @@ export const es: Translations = {
     passwordMismatch: "Las contraseñas no coinciden",
     minLength: "Mínimo {min} caracteres",
     maxLength: "Máximo {max} caracteres",
+    invalidCredentials: "Credenciales de acceso inválidas",
+    reservationNotFound: "Reservación no encontrada",
+    timeSlotNotAvailable: "Horario no disponible",
+    userAlreadyRegistered: "El usuario ya está registrado",
+    emailAlreadyExists: "El correo electrónico ya está registrado",
+    networkError: "Error de conexión. Verifica tu conexión a internet.",
+    passwordMinLength: "La contraseña debe tener al menos 6 caracteres",
+    unexpected: "Error inesperado. Intenta nuevamente.",
   },
 };
