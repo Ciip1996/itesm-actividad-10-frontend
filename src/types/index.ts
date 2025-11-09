@@ -112,6 +112,7 @@ export interface CreateReservationDTO {
   email_cliente: string;
   telefono_cliente: string;
   notas?: string;
+  id_usuario?: string; // Optional for backend to use if needed
 }
 
 /**

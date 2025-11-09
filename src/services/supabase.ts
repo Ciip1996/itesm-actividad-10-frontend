@@ -2,25 +2,25 @@ import { createClient } from "@supabase/supabase-js";
 import { SUPABASE_CONFIG } from "@config/index";
 
 /**
- * Cliente de Supabase singleton con configuración segura
+ * Supabase singleton client with secure configuration
  */
 export const supabase = createClient(
   SUPABASE_CONFIG.url,
   SUPABASE_CONFIG.anonKey,
   {
     auth: {
-      // Configuración de persistencia de sesión
+      // Session persistence configuration
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
 
-      // Usar localStorage para persistir sesiones (más seguro que cookies en este caso)
+      // Use localStorage to persist sessions (more secure than cookies in this case)
       storage: window.localStorage,
 
-      // Clave única para el almacenamiento de auth
+      // Unique key for auth storage
       storageKey: "supabase.auth.token",
 
-      // PKCE (Proof Key for Code Exchange) para mayor seguridad en el flujo OAuth
+      // PKCE (Proof Key for Code Exchange) for enhanced OAuth flow security
       flowType: "pkce",
     },
     global: {
@@ -28,7 +28,7 @@ export const supabase = createClient(
         "x-client-info": "supabase-js-web",
       },
     },
-    // Configuración de realtime (deshabilitada si no se usa para ahorrar recursos)
+    // Realtime configuration (disabled if not used to save resources)
     realtime: {
       params: {
         eventsPerSecond: 10,
@@ -38,8 +38,8 @@ export const supabase = createClient(
 );
 
 /**
- * Inicializar cliente de Supabase
- * Verifica la configuración y retorna el cliente
+ * Initialize Supabase client
+ * Verify configuration and return the client
  */
 export const initSupabase = () => {
   if (!SUPABASE_CONFIG.url || !SUPABASE_CONFIG.anonKey) {
@@ -51,11 +51,11 @@ export const initSupabase = () => {
 };
 
 /**
- * Limpiar datos de sesión del almacenamiento local
- * Útil para logout completo o limpieza de datos
+ * Clear session data from local storage
+ * Useful for complete logout or data cleanup
  */
 export const clearAuthStorage = () => {
-  // Limpiar solo las claves relacionadas con Supabase
+  // Clear only Supabase-related keys
   const keysToRemove = Object.keys(localStorage).filter((key) =>
     key.startsWith("supabase.")
   );

@@ -27,16 +27,16 @@ const translations: Record<Language, Translations> = {
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  // Obtener idioma del localStorage o usar español por defecto
+  // Get language from localStorage or use Spanish as default
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem("language");
     return (saved as Language) || "es";
   });
 
-  // Guardar idioma en localStorage cuando cambie
+  // Save language to localStorage when it changes
   useEffect(() => {
     localStorage.setItem("language", language);
-    // Actualizar el atributo lang del HTML
+    // Update the lang attribute of the HTML element
     document.documentElement.lang = language;
   }, [language]);
 

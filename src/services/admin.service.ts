@@ -6,13 +6,13 @@ import type {
 } from "@/types";
 
 /**
- * Servicio de administración
+ * Administration service
  */
 export class AdminService {
   private static readonly BASE_URL = `${SUPABASE_CONFIG.url}/functions/v1`;
 
   /**
-   * Obtener estadísticas del dashboard
+   * Get dashboard statistics
    */
   static async getDashboardStats(
     fecha_inicio?: string,
@@ -96,7 +96,7 @@ export class AdminService {
   }
 
   /**
-   * Enviar notificación
+   * Send notification
    */
   static async sendNotification(data: {
     tipo: "confirmacion" | "recordatorio" | "cancelacion";

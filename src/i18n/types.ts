@@ -1,4 +1,4 @@
-// Tipos para las traducciones
+// Types for translations
 export type Language = "es" | "en";
 
 export interface Translations {

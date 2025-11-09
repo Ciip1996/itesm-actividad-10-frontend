@@ -6,7 +6,7 @@ import type {
   Reservation,
 } from "@/types";
 
-// Tipo para la respuesta del backend
+// Type for backend response
 interface BackendAvailabilitySlot {
   hora: string;
   turno: string;
@@ -14,13 +14,13 @@ interface BackendAvailabilitySlot {
 }
 
 /**
- * Servicio de reservaciones
+ * Reservation service
  */
 export class ReservationService {
   private static readonly BASE_URL = `${SUPABASE_CONFIG.url}/functions/v1`;
 
   /**
-   * Obtener el token de sesión actual del usuario autenticado
+   * Get current session token from authenticated user
    */
   private static async getAuthToken(): Promise<string> {
     const { supabase } = await import("./supabase");
@@ -28,8 +28,8 @@ export class ReservationService {
       data: { session },
     } = await supabase.auth.getSession();
 
-    // Si hay sesión activa, usar el token del usuario
-    // Si no, usar el anon key (para endpoints públicos)
+    // If there's an active session, use the user's token
+    // If not, use the anon key (for public endpoints)
     return session?.access_token || SUPABASE_CONFIG.anonKey;
   }
 
@@ -60,9 +60,9 @@ export class ReservationService {
 
     const result = await response.json();
 
-    // La API devuelve horarios_disponibles, no disponibles
+    // The API returns horarios_disponibles, not disponibles
     if (result.data?.horarios_disponibles) {
-      // Transformar la estructura del backend al formato esperado por el frontend
+      // Transform backend structure to frontend expected format
       return result.data.horarios_disponibles.map(
         (slot: BackendAvailabilitySlot) => ({
           hora: slot.hora,
@@ -77,7 +77,7 @@ export class ReservationService {
   }
 
   /**
-   * Crear nueva reservación
+   * Create new reservation
    */
   static async createReservation(data: CreateReservationDTO) {
     const token = await this.getAuthToken();
@@ -94,7 +94,7 @@ export class ReservationService {
     if (!response.ok) {
       const errorData = await response.json();
 
-      // Extraer mensaje de error más específico
+      // Extract more specific error message
       const errorMessage =
         errorData.error?.message ||
         errorData.message ||
@@ -122,7 +122,7 @@ export class ReservationService {
 
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(
-          () => reject(new Error("Timeout obteniendo reservaciones")),
+          () => reject(new Error("Timeout getting reservations")),
           5000
         )
       );
@@ -138,7 +138,7 @@ export class ReservationService {
 
       return data || [];
     } catch (err) {
-      // Retornar array vacío en caso de error
+      // Return empty array on error
       return [];
     }
   }
@@ -196,7 +196,7 @@ export class ReservationService {
 
     const timeoutPromise = new Promise<never>((_, reject) =>
       setTimeout(
-        () => reject(new Error("Timeout cancelando reservación")),
+        () => reject(new Error("Timeout canceling reservation")),
         5000
       )
     );

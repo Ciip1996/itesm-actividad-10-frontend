@@ -1,8 +1,8 @@
 /**
- * Configuración de Supabase
+ * Supabase configuration
  */
 
-// Validar que las variables de entorno estén definidas
+// Validate that environment variables are defined
 const validateEnvVar = (value: string | undefined, name: string): string => {
   if (!value || value.trim() === "") {
     throw new Error(
@@ -21,7 +21,7 @@ export const SUPABASE_CONFIG = {
 } as const;
 
 /**
- * Configuración de la aplicación
+ * Application configuration
  */
 export const APP_CONFIG = {
   name: "Sistema de Reservaciones",
@@ -46,7 +46,7 @@ export const APP_CONFIG = {
 } as const;
 
 /**
- * Rutas de la aplicación
+ * Application routes
  */
 export const ROUTES = {
   HOME: "/",

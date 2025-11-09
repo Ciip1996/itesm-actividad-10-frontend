@@ -68,22 +68,22 @@ export const toTitleCase = (text: string): string => {
 };
 
 /**
- * Formatear hora a formato AM/PM
- * @param time - Hora en formato 24 horas (HH:mm:ss o HH:mm)
- * @returns Hora en formato 12 horas con AM/PM
+ * Format time to AM/PM format
+ * @param time - Time in 24-hour format (HH:mm:ss or HH:mm)
+ * @returns Time in 12-hour format with AM/PM
  */
 export const formatTimeToAMPM = (time: string): string => {
-  // Extraer hora y minutos (ignorar segundos si existen)
+  // Extract hours and minutes (ignore seconds if present)
   const [hourStr, minuteStr] = time.split(":");
   const hour = parseInt(hourStr, 10);
   const minute = minuteStr || "00";
 
-  // Determinar AM/PM
+  // Determine AM/PM
   const period = hour >= 12 ? "PM" : "AM";
 
-  // Convertir a formato 12 horas
+  // Convert to 12-hour format
   const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
 
-  // Formatear
+  // Format
   return `${hour12}:${minute} ${period}`;
 };

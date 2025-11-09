@@ -31,7 +31,7 @@ export class AuthService {
     if (authError) throw authError;
     if (!authData.user) throw new Error("User creation failed");
 
-    // Crear o actualizar perfil de usuario (usando upsert por si el trigger ya lo creó)
+    // Create or update user profile (using upsert in case the trigger already created it)
     const { data: profileData, error: profileError } = await supabase
       .from("usuarios")
       .upsert(
@@ -72,15 +72,15 @@ export class AuthService {
   }
 
   /**
-   * Cerrar sesión
-   * Limpia tanto la sesión de Supabase como el almacenamiento local
+   * Sign out
+   * Clears both Supabase session and local storage
    */
   static async signOut() {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } finally {
-      // Siempre limpiar el almacenamiento local, incluso si hay error
+      // Always clear local storage, even if there's an error
       clearAuthStorage();
     }
   }
@@ -106,14 +106,14 @@ export class AuthService {
       new Promise<never>((_, reject) =>
         setTimeout(
           () =>
-            reject(new Error("Timeout: La consulta tardó más de 5 segundos")),
+            reject(new Error("Timeout: Query took longer than 5 seconds")),
           5000
         )
       ),
     ]);
 
     if (error) {
-      throw new Error(`Error al obtener perfil: ${error.message}`);
+      throw new Error(`Error getting profile: ${error.message}`);
     }
 
     if (!data) {

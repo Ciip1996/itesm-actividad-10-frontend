@@ -1,6 +1,6 @@
 import type { APIError } from "@/types";
 
-// Mapeo de mensajes de error en inglés a claves de traducción
+// Mapping of English error messages to translation keys
 const ERROR_KEY_MAP: Record<string, string> = {
   "Invalid login credentials": "invalidCredentials",
   "Reservation not found": "reservationNotFound",
@@ -13,8 +13,8 @@ const ERROR_KEY_MAP: Record<string, string> = {
 };
 
 /**
- * Obtener mensaje de error amigable usando i18n
- * Nota: Esta función debe ser llamada desde componentes que tengan acceso a useLanguage
+ * Get a user-friendly error message using i18n
+ * Note: This function should be called from components that have access to useLanguage
  */
 export const getErrorMessage = (
   error: unknown,
@@ -29,10 +29,10 @@ export const getErrorMessage = (
   } else if (isAPIError(error)) {
     errorMessage = error.message;
   } else {
-    return t?.errors.unexpected || "Error inesperado. Intenta nuevamente.";
+    return t?.errors.unexpected || "Unexpected error. Please try again.";
   }
 
-  // Si tenemos traducciones disponibles, usarlas
+  // If we have translations available, use them
   if (t) {
     const errorKey = ERROR_KEY_MAP[errorMessage];
     if (errorKey && t.errors[errorKey]) {
@@ -40,16 +40,16 @@ export const getErrorMessage = (
     }
   }
 
-  // Fallback a mensaje directo o genérico
+  // Fallback to direct message or generic
   return (
     errorMessage ||
     t?.errors.unexpected ||
-    "Error inesperado. Intenta nuevamente."
+    "Unexpected error. Please try again."
   );
 };
 
 /**
- * Verificar si es un error de API
+ * Check if error is an API error
  */
 export const isAPIError = (error: unknown): error is APIError => {
   return (
@@ -61,8 +61,8 @@ export const isAPIError = (error: unknown): error is APIError => {
 };
 
 /**
- * Manejar error y retornar mensaje
- * @deprecated Usar getErrorMessage con traducciones desde componentes con useLanguage
+ * Handle error and return message
+ * @deprecated Use getErrorMessage with translations from components with useLanguage
  */
 export const handleError = (error: unknown): string => {
   return getErrorMessage(error);

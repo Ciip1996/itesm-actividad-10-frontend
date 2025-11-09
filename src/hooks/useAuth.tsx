@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Check for existing session
     const initAuth = async () => {
       try {
-        // Intentar obtener sesión existente
+        // Try to get existing session
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -29,13 +29,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!mounted) return;
 
         if (session?.user) {
-          // Intentar obtener perfil con timeout
+          // Try to get profile with timeout
           try {
             const profilePromise = AuthService.getUserProfile(session.user.id);
             const timeoutPromise = new Promise((_, reject) =>
               setTimeout(
-                () => reject(new Error("Timeout obteniendo perfil inicial")),
-                2000 // 2 segundos - optimizado para UX
+                () => reject(new Error("Timeout getting initial profile")),
+                2000 // 2 seconds - optimized for UX
               )
             );
 
@@ -46,13 +46,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             if (!mounted) return;
 
-            // Actualizar user y loading en el mismo ciclo de render
+            // Update user and loading in the same render cycle
             setUser(profile);
             setLoading(false);
           } catch (profileError) {
             if (!mounted) return;
 
-            // Crear perfil fallback desde metadata
+            // Create fallback profile from metadata
             const userMetadata = session.user.user_metadata || {};
             const fallbackProfile: User = {
               id_usuario: session.user.id,
@@ -66,11 +66,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               activo: true,
             };
 
-            // Actualizar user y loading en el mismo ciclo de render
+            // Update user and loading in the same render cycle
             setUser(fallbackProfile);
             setLoading(false);
 
-            // Intentar crear en DB en background
+            // Try to create in DB in background
             (async () => {
               try {
                 const { data } = await supabase
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                   setUser(data);
                 }
               } catch (err) {
-                // Ignorar errores en background
+                // Ignore errors in background
               }
             })();
           }
@@ -119,18 +119,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { user: authUser } = await AuthService.signIn(email, password);
 
       if (!authUser) {
-        throw new Error("No se pudo autenticar el usuario");
+        throw new Error("Could not authenticate user");
       }
 
-      // Intentar obtener el perfil del usuario con timeout
+      // Try to get user profile with timeout
       try {
         const profilePromise = AuthService.getUserProfile(authUser.id);
         const timeoutPromise = new Promise(
           (_, reject) =>
             setTimeout(
-              () => reject(new Error("Timeout obteniendo perfil")),
+              () => reject(new Error("Timeout getting profile")),
               2000
-            ) // 2 segundos
+            ) // 2 seconds
         );
 
         const profile = (await Promise.race([
@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setUser(profile);
       } catch (profileError) {
-        // Crear perfil desde user_metadata (sin guardar en DB)
+        // Create profile from user_metadata (without saving to DB)
         const userMetadata = authUser.user_metadata || {};
         const fallbackProfile: User = {
           id_usuario: authUser.id,
@@ -152,7 +152,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           activo: true,
         };
 
-        // Intentar crear en DB (sin esperar)
+        // Try to create in DB (without waiting)
         supabase
           .from("usuarios")
           .upsert(fallbackProfile, { onConflict: "id_usuario" })
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
           });
 
-        // Usar el perfil fallback inmediatamente
+        // Use fallback profile immediately
         setUser(fallbackProfile);
       }
     } catch (error) {

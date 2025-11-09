@@ -18,11 +18,11 @@ export const Home: React.FC = () => {
           <p className="home__subtitle">{t.home.subtitle}</p>
           <div className="home__actions">
             {loading ? (
-              // Skeleton de botones mientras carga la sesión
-              <div className="home__actions-skeleton">
-                <div className="home__button-skeleton"></div>
-                <div className="home__button-skeleton"></div>
-              </div>
+              // Button skeleton while session is loading
+              <>
+                <div className="skeleton-button"></div>
+                <div className="skeleton-button"></div>
+              </>
             ) : isAuthenticated ? (
               <Link to="/reservations/new">
                 <Button variant="primary" size="lg">

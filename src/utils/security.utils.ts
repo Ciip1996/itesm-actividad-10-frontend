@@ -18,7 +18,7 @@ export const validateSession = async (): Promise<boolean> => {
       return false;
     }
 
-    // Verificar si el token no ha expirado
+    // Check if token hasn't expired
     const expiresAt = session.expires_at;
     if (!expiresAt) return false;
 
@@ -77,7 +77,7 @@ export const checkBrowserSecurity = (): {
 } => {
   const issues: string[] = [];
 
-  // Verificar si está en HTTPS (en producción)
+  // Check if on HTTPS (in production)
   if (
     import.meta.env.PROD &&
     window.location.protocol !== "https:" &&
@@ -86,7 +86,7 @@ export const checkBrowserSecurity = (): {
     issues.push("Application should be served over HTTPS");
   }
 
-  // Verificar si localStorage está disponible
+  // Check if localStorage is available
   try {
     localStorage.setItem("test", "test");
     localStorage.removeItem("test");
@@ -94,7 +94,7 @@ export const checkBrowserSecurity = (): {
     issues.push("localStorage is not available");
   }
 
-  // Verificar si crypto API está disponible
+  // Check if crypto API is available
   if (!window.crypto || !window.crypto.getRandomValues) {
     issues.push("Crypto API is not available");
   }
@@ -126,14 +126,14 @@ class RateLimiter {
     const now = Date.now();
     const timestamps = this.requests.get(key) || [];
 
-    // Filtrar timestamps fuera de la ventana
+    // Filter timestamps outside the window
     const validTimestamps = timestamps.filter((ts) => now - ts < windowMs);
 
     if (validTimestamps.length >= maxRequests) {
       return false;
     }
 
-    // Agregar nuevo timestamp
+    // Add new timestamp
     validTimestamps.push(now);
     this.requests.set(key, validTimestamps);
 
@@ -158,7 +158,7 @@ class RateLimiter {
 
 export const rateLimiter = new RateLimiter();
 
-// Limpiar rate limiter cada minuto
+// Clean up rate limiter every minute
 if (typeof window !== "undefined") {
   setInterval(() => rateLimiter.cleanup(), 60000);
 }

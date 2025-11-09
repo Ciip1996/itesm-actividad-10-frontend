@@ -22,7 +22,7 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Obtener la ruta a la que intentaba acceder antes del login
+  // Get the route user was trying to access before login
   const locationState = location.state as {
     from?: { pathname: string };
   } | null;
@@ -42,7 +42,7 @@ export const Login: React.FC = () => {
 
     try {
       await signIn(formData.email, formData.password);
-      // Redirigir a la página a la que intentaba acceder o a reservations por defecto
+      // Redirect to the page user was trying to access or to reservations by default
       navigate(from, { replace: true });
     } catch (err) {
       setError(getErrorMessage(err, t));

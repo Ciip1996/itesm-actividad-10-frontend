@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
-  // Mostrar spinner mientras verifica la autenticación
+  // Show spinner while verifying authentication
   if (loading) {
     return (
       <div
@@ -28,9 +28,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-  // Redirigir a login si no está autenticado
+  // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    // Guardar la ruta a la que intentaba acceder
+    // Save the route user was trying to access
     return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 

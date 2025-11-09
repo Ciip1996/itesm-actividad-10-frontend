@@ -35,7 +35,7 @@ export const NewReservation: React.FC = () => {
   });
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Obtener el email del usuario autenticado
+  // Get the email from the authenticated user
   useEffect(() => {
     const getUserEmail = async () => {
       const {
@@ -73,7 +73,7 @@ export const NewReservation: React.FC = () => {
         numero_personas: formData.numero_personas,
       });
 
-      // Validar que slots sea un array
+      // Validate that slots is an array
       if (!Array.isArray(slots)) {
         setAvailableSlots([]);
         setStep(2);
@@ -92,8 +92,8 @@ export const NewReservation: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Asegurar que la hora esté en formato HH:MM (sin segundos)
-    // La hora viene del backend como "HH:MM:SS", necesitamos enviarla como "HH:MM"
+    // Ensure time is in HH:MM format (without seconds)
+    // Time comes from backend as "HH:MM:SS", we need to send it as "HH:MM"
     const horaFormateada = formData.hora.includes(":")
       ? formData.hora.substring(0, 5)
       : formData.hora;
@@ -101,13 +101,14 @@ export const NewReservation: React.FC = () => {
     const reservationData = {
       ...formData,
       hora: horaFormateada,
-      numero_personas: Number(formData.numero_personas), // Asegurar que sea número
+      numero_personas: Number(formData.numero_personas), // Ensure it's a number
+      id_usuario: user?.id_usuario, // Add the authenticated user's ID
     };
 
     try {
       const result = await createReservation(reservationData);
 
-      // Manejar diferentes estructuras de respuesta
+      // Handle different response structures
       const folio =
         result?.folio || result?.data?.folio || result?.reserva?.folio || "N/A";
 

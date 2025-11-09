@@ -15,7 +15,7 @@ interface PublicRouteProps {
 export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
-  // Si ya está autenticado, redirigir a reservations
+  // If already authenticated, redirect to reservations
   if (isAuthenticated) {
     return <Navigate to={ROUTES.RESERVATIONS} replace />;
   }

@@ -30,9 +30,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
-  // No necesitamos verificar loading aquí porque AppRoutes ya lo maneja
+  // No need to check loading here because AppRoutes already handles it
   if (!isAuthenticated) {
-    // Guardar la ubicación a la que intentaba acceder
+    // Save the location user was trying to access
     return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
@@ -45,8 +45,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 const AppRoutes: React.FC = () => {
   const { loading } = useAuth();
 
-  // Mostrar spinner global durante la verificación inicial de autenticación
-  // Solo ocultamos el loading cuando realmente tenemos una decisión (user existe o confirmamos que no hay sesión)
+  // Show global spinner during initial authentication check
+  // Only hide loading when we actually have a decision (user exists or we confirm no session)
   if (loading) {
     return (
       <div className="app__loading">
