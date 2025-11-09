@@ -79,6 +79,11 @@ export const en: Translations = {
     cancelButton: "Cancel",
     confirmCancel: "Are you sure you want to cancel this reservation?",
     cancelError: "Error cancelling reservation",
+    cancelModalTitle: "Cancel Reservation",
+    cancelModalMessage:
+      "Are you sure you want to cancel this reservation? This action cannot be undone.",
+    cancelModalConfirm: "Yes, cancel it",
+    cancelModalCancel: "No, keep it",
   },
 
   newReservation: {

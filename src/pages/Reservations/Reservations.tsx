@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Card } from "@atoms/Card";
 import { Spinner } from "@atoms/Spinner";
 import { Alert } from "@atoms/Alert";
+import { Modal } from "@atoms/Modal";
 import { ReservationCard } from "@molecules/ReservationCard";
 import { useAuth } from "@hooks/useAuth";
 import { useReservations } from "@hooks/useReservations";
@@ -16,6 +17,11 @@ export const Reservations: React.FC = () => {
     useReservations(t);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [reservationToCancel, setReservationToCancel] = useState<number | null>(
+    null
+  );
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const loadReservations = useCallback(async () => {
     if (!user) return;
@@ -34,14 +40,33 @@ export const Reservations: React.FC = () => {
     }
   }, [user, loadReservations]);
 
-  const handleCancel = async (id: number) => {
-    if (!confirm(t.reservations.confirmCancel)) return;
+  const handleCancelClick = (id: number) => {
+    setReservationToCancel(id);
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (reservationToCancel === null) return;
+
+    setIsCancelling(true);
+    setCancelError(null);
 
     try {
-      await cancelReservation(id);
+      await cancelReservation(reservationToCancel, "Cancelled by user");
       await loadReservations();
+      setShowCancelModal(false);
+      setReservationToCancel(null);
     } catch (err) {
       setCancelError(t.reservations.cancelError);
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
+  const handleCloseCancelModal = () => {
+    if (!isCancelling) {
+      setShowCancelModal(false);
+      setReservationToCancel(null);
     }
   };
 
@@ -83,11 +108,24 @@ export const Reservations: React.FC = () => {
               <ReservationCard
                 key={reservation.id_reserva}
                 reservation={reservation}
-                onCancel={handleCancel}
+                onCancel={handleCancelClick}
               />
             ))}
           </div>
         )}
+
+        <Modal
+          isOpen={showCancelModal}
+          onClose={handleCloseCancelModal}
+          onConfirm={handleConfirmCancel}
+          title={t.reservations.cancelModalTitle}
+          confirmText={t.reservations.cancelModalConfirm}
+          cancelText={t.reservations.cancelModalCancel}
+          variant="danger"
+          loading={isCancelling}
+        >
+          <p>{t.reservations.cancelModalMessage}</p>
+        </Modal>
       </div>
     </div>
   );

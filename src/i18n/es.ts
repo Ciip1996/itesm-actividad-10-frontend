@@ -81,6 +81,11 @@ export const es: Translations = {
     cancelButton: "Cancelar",
     confirmCancel: "¿Estás seguro de cancelar esta reservación?",
     cancelError: "Error al cancelar la reservación",
+    cancelModalTitle: "Cancelar Reservación",
+    cancelModalMessage:
+      "¿Estás seguro de que deseas cancelar esta reservación? Esta acción no se puede deshacer.",
+    cancelModalConfirm: "Sí, cancelar",
+    cancelModalCancel: "No, mantener",
   },
 
   newReservation: {

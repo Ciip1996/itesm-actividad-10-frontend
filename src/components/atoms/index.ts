@@ -8,3 +8,4 @@ export * from "./Badge";
 export * from "./Spinner";
 export * from "./Alert";
 export * from "./Avatar";
+export * from "./Modal";

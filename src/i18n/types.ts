@@ -83,6 +83,10 @@ export interface Translations {
     cancelButton: string;
     confirmCancel: string;
     cancelError: string;
+    cancelModalTitle: string;
+    cancelModalMessage: string;
+    cancelModalConfirm: string;
+    cancelModalCancel: string;
   };
 
   // New Reservation
