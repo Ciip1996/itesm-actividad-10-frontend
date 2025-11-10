@@ -4,6 +4,7 @@ import { Card } from "@atoms/Card";
 import { Button } from "@atoms/Button";
 import { Alert } from "@atoms/Alert";
 import { TextField } from "@molecules/FormField";
+import { GoogleButton } from "@molecules/GoogleButton";
 import { getErrorMessage } from "@utils/error.utils";
 import { UserRole } from "@/types";
 import "./Register.scss";
@@ -12,7 +13,7 @@ import { useLanguage } from "@/i18n";
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ export const Register: React.FC = () => {
     telefono: "",
   });
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +59,21 @@ export const Register: React.FC = () => {
       setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setGoogleLoading(true);
+
+    try {
+      await signInWithGoogle();
+      // Note: The navigation will happen automatically after the Google OAuth redirect
+      // and the auth state change
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -151,6 +168,18 @@ export const Register: React.FC = () => {
                 {t.register.submit}
               </Button>
             </form>
+
+            <div className="register__divider">
+              <div className="register__divider-line"></div>
+              <span className="register__divider-text">O</span>
+              <div className="register__divider-line"></div>
+            </div>
+
+            <GoogleButton
+              onClick={handleGoogleSignIn}
+              loading={googleLoading}
+              fullWidth
+            />
 
             <div className="register__footer">
               <p className="register__footer-text">

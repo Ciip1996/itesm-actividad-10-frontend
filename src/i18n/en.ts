@@ -39,6 +39,7 @@ export const en: Translations = {
     email: "Email Address",
     password: "Password",
     submit: "Sign In",
+    googleSignIn: "Sign in with Google",
     noAccount: "Don't have an account?",
     registerHere: "Sign up here",
   },

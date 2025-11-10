@@ -13,6 +13,7 @@ import { PublicRoute } from "@/components/PublicRoute";
 import { Home } from "@pages/Home";
 import { Login } from "@pages/Login";
 import { Register } from "@pages/Register";
+import { AuthCallback } from "@pages/AuthCallback";
 import { Reservations } from "@pages/Reservations";
 import { NewReservation } from "@pages/NewReservation";
 // Admin pages
@@ -81,6 +82,14 @@ const AppRoutes: React.FC = () => {
           element={
             <PublicRoute>
               <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path={ROUTES.AUTH_CALLBACK}
+          element={
+            <PublicRoute>
+              <AuthCallback />
             </PublicRoute>
           }
         />

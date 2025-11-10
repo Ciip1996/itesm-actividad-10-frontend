@@ -52,6 +52,7 @@ export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
   REGISTER: "/register",
+  AUTH_CALLBACK: "/auth/callback",
   RESERVATIONS: "/reservations",
   NEW_RESERVATION: "/reservations/new",
   RESERVATION_DETAIL: "/reservations/:id",

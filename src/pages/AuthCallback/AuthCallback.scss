@@ -1,0 +1,24 @@
+@import "@styles/variables.scss";
+@import "@styles/mixins.scss";
+
+.auth-callback {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $color-bg-secondary;
+
+  &__content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-lg;
+  }
+
+  &__text {
+    color: $color-text-secondary;
+    font-size: $font-size-md;
+    margin: 0;
+  }
+}

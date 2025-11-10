@@ -33,6 +33,26 @@
     // Form styles handled by FormField
   }
 
+  &__divider {
+    display: flex;
+    align-items: center;
+    margin: $spacing-lg 0;
+    gap: $spacing-md;
+
+    &-line {
+      flex: 1;
+      height: 1px;
+      background-color: $border-color;
+    }
+
+    &-text {
+      color: $color-text-secondary;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      white-space: nowrap;
+    }
+  }
+
   &__footer {
     margin-top: $spacing-xl;
     padding-top: $spacing-lg;

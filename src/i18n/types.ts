@@ -41,6 +41,7 @@ export interface Translations {
     email: string;
     password: string;
     submit: string;
+    googleSignIn: string;
     noAccount: string;
     registerHere: string;
   };
