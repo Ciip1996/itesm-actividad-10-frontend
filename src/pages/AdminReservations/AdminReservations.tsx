@@ -58,30 +58,35 @@ export const AdminReservations: React.FC = () => {
   };
 
   const applyFilters = () => {
-    let filtered = [...reservations];
+    try {
+      let filtered = [...reservations];
 
-    if (filters.fecha_desde) {
-      filtered = filtered.filter(r => r.fecha >= filters.fecha_desde);
+      if (filters.fecha_desde) {
+        filtered = filtered.filter(r => r.fecha >= filters.fecha_desde);
+      }
+
+      if (filters.fecha_hasta) {
+        filtered = filtered.filter(r => r.fecha <= filters.fecha_hasta);
+      }
+
+      if (filters.estado) {
+        filtered = filtered.filter(r => r.estado === filters.estado);
+      }
+
+      if (filters.busqueda) {
+        const search = filters.busqueda.toLowerCase();
+        filtered = filtered.filter(r => 
+          (r.folio || '').toLowerCase().includes(search) ||
+          (r.nombre_invitado || '').toLowerCase().includes(search) ||
+          (r.email_invitado || '').toLowerCase().includes(search)
+        );
+      }
+
+      setFilteredReservations(filtered);
+    } catch (error) {
+      console.error('Error applying filters:', error);
+      setFilteredReservations(reservations);
     }
-
-    if (filters.fecha_hasta) {
-      filtered = filtered.filter(r => r.fecha <= filters.fecha_hasta);
-    }
-
-    if (filters.estado) {
-      filtered = filtered.filter(r => r.estado === filters.estado);
-    }
-
-    if (filters.busqueda) {
-      const search = filters.busqueda.toLowerCase();
-      filtered = filtered.filter(r => 
-        r.folio.toLowerCase().includes(search) ||
-        r.nombre_invitado?.toLowerCase().includes(search) ||
-        r.email_invitado.toLowerCase().includes(search)
-      );
-    }
-
-    setFilteredReservations(filtered);
   };
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

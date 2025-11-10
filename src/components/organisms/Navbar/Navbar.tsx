@@ -6,10 +6,11 @@ import { UserMenu } from "@molecules/UserMenu";
 import { useAuth } from "@/hooks";
 import { useLanguage } from "@/i18n";
 import { ROUTES } from "@config/index";
+import { UserRole } from "@/types";
 import "./Navbar.scss";
 
 export const Navbar: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, hasRole } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -79,6 +80,17 @@ export const Navbar: React.FC = () => {
               >
                 {t.navbar.newReservation}
               </Link>
+              {/* Admin button for authorized users */}
+              {hasRole([UserRole.ADMINISTRADOR, UserRole.GERENTE]) && (
+                <Link
+                  to={ROUTES.ADMIN_DASHBOARD}
+                  className={`navbar__link navbar__link--admin ${
+                    location.pathname.startsWith(ROUTES.ADMIN) ? "navbar__link--active" : ""
+                  }`}
+                >
+                  🔧 Admin
+                </Link>
+              )}
             </div>
           )}
 
@@ -170,6 +182,20 @@ export const Navbar: React.FC = () => {
                 >
                   {t.navbar.newReservation}
                 </Link>
+                {/* Admin button for mobile */}
+                {hasRole([UserRole.ADMINISTRADOR, UserRole.GERENTE]) && (
+                  <Link
+                    to={ROUTES.ADMIN_DASHBOARD}
+                    className={`navbar__mobile-link navbar__mobile-link--admin ${
+                      location.pathname.startsWith(ROUTES.ADMIN)
+                        ? "navbar__mobile-link--active"
+                        : ""
+                    }`}
+                    onClick={closeMobileMenu}
+                  >
+                    🔧 Admin
+                  </Link>
+                )}
                 <div className="navbar__mobile-divider" />
                 <UserMenu />
               </>

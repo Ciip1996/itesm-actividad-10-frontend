@@ -4,42 +4,28 @@ import { Spinner } from "@atoms/Spinner";
 import { Alert } from "@atoms/Alert";
 import { useAdmin } from "@hooks/useAdmin";
 import { useLanguage } from "@/i18n";
+import { DashboardStats } from "@/types";
 import "./AdminDashboard.scss";
-
-export interface DashboardStats {
-  today: {
-    fecha: string;
-    total_reservas: number;
-    reservas_confirmadas: number;
-    reservas_pendientes: number;
-    reservas_canceladas: number;
-    total_personas: number;
-  };
-  weekly: {
-    total_reservas: number;
-    reservas_confirmadas: number;
-    reservas_canceladas: number;
-    total_personas: number;
-  };
-}
 
 export const AdminDashboard: React.FC = () => {
   const { t } = useLanguage();
   const { getDashboardStats, loading, error } = useAdmin();
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
     const loadStats = async () => {
+      console.log('AdminDashboard: Loading stats...');
       try {
         const data = await getDashboardStats();
+        console.log('AdminDashboard: Data received:', data);
         setStats(data);
       } catch (err) {
-        console.error('Error loading dashboard stats:', err);
+        console.error('AdminDashboard: Error loading stats:', err);
       }
     };
 
     loadStats();
-  }, [getDashboardStats]);
+  }, []); // Remove getDashboardStats dependency to prevent infinite re-renders
 
   if (loading) {
     return (
@@ -125,19 +111,19 @@ export const AdminDashboard: React.FC = () => {
                 <div className="admin-dashboard__chart-placeholder">
                   <div className="admin-dashboard__chart-stats">
                     <div className="admin-dashboard__chart-stat">
-                      <span className="admin-dashboard__chart-label">Confirmadas</span>
+                      <span className="admin-dashboard__chart-label">Confirmadas: </span>
                       <span className="admin-dashboard__chart-value" style={{color: '#10B981'}}>
                         {stats.today.reservas_confirmadas}
                       </span>
                     </div>
                     <div className="admin-dashboard__chart-stat">
-                      <span className="admin-dashboard__chart-label">Pendientes</span>
+                      <span className="admin-dashboard__chart-label">Pendientes: </span>
                       <span className="admin-dashboard__chart-value" style={{color: '#F59E0B'}}>
                         {stats.today.reservas_pendientes}
                       </span>
                     </div>
                     <div className="admin-dashboard__chart-stat">
-                      <span className="admin-dashboard__chart-label">Canceladas</span>
+                      <span className="admin-dashboard__chart-label">Canceladas: </span>
                       <span className="admin-dashboard__chart-value" style={{color: '#EF4444'}}>
                         {stats.today.reservas_canceladas}
                       </span>
@@ -151,15 +137,15 @@ export const AdminDashboard: React.FC = () => {
                 <div className="admin-dashboard__chart-placeholder">
                   <div className="admin-dashboard__weekly-comparison">
                     <div className="admin-dashboard__week-stat">
-                      <span className="admin-dashboard__week-label">Esta Semana</span>
+                      <span className="admin-dashboard__week-label">Esta Semana: </span>
                       <span className="admin-dashboard__week-value">{stats.weekly.total_reservas} reservas</span>
                     </div>
                     <div className="admin-dashboard__week-stat">
-                      <span className="admin-dashboard__week-label">Confirmaciones</span>
+                      <span className="admin-dashboard__week-label">Confirmaciones: </span>
                       <span className="admin-dashboard__week-value">{stats.weekly.reservas_confirmadas}</span>
                     </div>
                     <div className="admin-dashboard__week-stat">
-                      <span className="admin-dashboard__week-label">Cancelaciones</span>
+                      <span className="admin-dashboard__week-label">Cancelaciones: </span>
                       <span className="admin-dashboard__week-value">{stats.weekly.reservas_canceladas}</span>
                     </div>
                   </div>

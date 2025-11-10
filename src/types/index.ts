@@ -163,10 +163,20 @@ export interface ReportResponse {
  * Dashboard stats interface
  */
 export interface DashboardStats {
-  reservas_hoy: number;
-  ocupacion_actual: number;
-  reservas_pendientes: number;
-  ingresos_estimados: number;
+  today: {
+    fecha: string;
+    total_reservas: number;
+    reservas_confirmadas: number;
+    reservas_pendientes: number;
+    reservas_canceladas: number;
+    total_personas: number;
+  };
+  weekly: {
+    total_reservas: number;
+    reservas_confirmadas: number;
+    reservas_canceladas: number;
+    total_personas: number;
+  };
 }
 
 /**
