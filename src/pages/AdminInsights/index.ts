@@ -1,0 +1,1 @@
+export { AdminInsights } from './AdminInsights';

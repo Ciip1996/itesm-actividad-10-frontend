@@ -57,6 +57,8 @@ export const ROUTES = {
   RESERVATION_DETAIL: "/reservations/:id",
   ADMIN: "/admin",
   ADMIN_DASHBOARD: "/admin/dashboard",
+  ADMIN_RESERVATIONS: "/admin/reservations",
+  ADMIN_TABLES: "/admin/tables",
   ADMIN_INSIGHTS: "/admin/insights",
   PROFILE: "/profile",
 } as const;

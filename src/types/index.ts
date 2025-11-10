@@ -127,7 +127,7 @@ export interface CheckAvailabilityDTO {
  * Generate report DTO
  */
 export interface GenerateReportDTO {
-  tipo_reporte: "insights_ia" | "reservaciones" | "ocupacion";
+  tipo_reporte: "insights_ia" | "ocupacion_diaria" | "reporte_completo";
   fecha_desde: string;
   fecha_hasta: string;
 }
