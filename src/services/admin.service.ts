@@ -123,4 +123,75 @@ export class AdminService {
 
     return await response.json();
   }
+
+  /**
+   * Update reservation
+   */
+  static async updateReservation(id_reserva: number, updateData: any) {
+    const response = await fetch(`${this.BASE_URL}/admin-panel`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      },
+      body: JSON.stringify({
+        action: "update_reservation",
+        id_reserva,
+        ...updateData
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error updating reservation");
+    }
+
+    const result = await response.json();
+    return result.data;
+  }
+
+  /**
+   * Get tables
+   */
+  static async getTables() {
+    const response = await fetch(`${this.BASE_URL}/admin-panel`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      },
+      body: JSON.stringify({
+        action: "get_tables"
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching tables");
+    }
+
+    const result = await response.json();
+    return result.data;
+  }
+
+  /**
+   * Get configuration
+   */
+  static async getConfiguracion() {
+    const response = await fetch(`${this.BASE_URL}/admin-panel`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      },
+      body: JSON.stringify({
+        action: "get_configuracion"
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching configuration");
+    }
+
+    const result = await response.json();
+    return result.data;
+  }
 }

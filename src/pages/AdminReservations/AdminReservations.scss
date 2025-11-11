@@ -1,0 +1,259 @@
+.admin-reservations {
+  padding: 2rem 0;
+  min-height: 100vh;
+  background-color: $color-bg-secondary;
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+  }
+
+  &__header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $color-text-primary;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtitle {
+    font-size: 1.1rem;
+    color: $color-text-secondary;
+  }
+
+  &__filters {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+  }
+
+  &__filters-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: $color-text-primary;
+    margin-bottom: 1rem;
+  }
+
+  &__filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  &__filter-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__filter-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $color-text-secondary;
+    margin-bottom: 0.5rem;
+  }
+
+  &__filter-select {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+    color: $color-text-primary;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
+
+  &__summary {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    p {
+      margin: 0;
+      color: $color-text-secondary;
+      font-size: 0.9rem;
+    }
+  }
+
+  &__table {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &__table-container {
+    overflow-x: auto;
+  }
+
+  &__table-element {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      background: $color-bg-secondary;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: $color-text-primary;
+      border-bottom: 2px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      color: $color-text-primary;
+    }
+
+    tr:hover {
+      background: $color-bg-secondary;
+    }
+  }
+
+  &__folio {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    background: $color-primary;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+
+  &__client-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__client-name {
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  &__client-email {
+    font-size: 0.85rem;
+    color: $color-text-secondary;
+  }
+
+  &__status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+
+    &--success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    &--warning {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    &--error {
+      background: #fecaca;
+      color: #991b1b;
+    }
+
+    &--default {
+      background: #e2e8f0;
+      color: #475569;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__reservation-details {
+    background: $color-bg-secondary;
+    padding: 1rem;
+    border-radius: 8px;
+
+    h4 {
+      margin: 0 0 1rem 0;
+      color: $color-text-primary;
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      color: $color-text-secondary;
+    }
+
+    strong {
+      color: $color-text-primary;
+    }
+  }
+
+  &__status-update {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__update-label {
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  &__status-select {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+    color: $color-text-primary;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .admin-reservations {
+    padding: 1rem 0;
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__filters-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    &__table-element {
+      font-size: 0.8rem;
+    }
+
+    &__table-element th,
+    &__table-element td {
+      padding: 0.5rem;
+    }
+  }
+}

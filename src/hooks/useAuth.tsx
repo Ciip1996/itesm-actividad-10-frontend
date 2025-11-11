@@ -191,6 +191,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
+  const signInWithGoogle = async () => {
+    await AuthService.signInWithGoogle();
+    // Note: The user will be updated automatically through the onAuthStateChange listener
+  };
+
   const hasRole = (roles: UserRole[]) => {
     if (!user) return false;
     return roles.includes(user.rol);
@@ -200,6 +205,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     loading,
     signIn,
+    signInWithGoogle,
     signUp,
     signOut,
     isAuthenticated: !!user,

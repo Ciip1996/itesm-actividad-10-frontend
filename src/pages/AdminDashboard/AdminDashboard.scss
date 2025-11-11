@@ -1,0 +1,177 @@
+.admin-dashboard {
+  padding: 2rem 0;
+  min-height: 100vh;
+  background-color: $color-bg-secondary;
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+  }
+
+  &__header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $color-text-primary;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtitle {
+    font-size: 1.1rem;
+    color: $color-text-secondary;
+  }
+
+  &__kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &__kpi {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  &__kpi-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__kpi-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+    border-radius: 12px;
+    color: white;
+  }
+
+  &__kpi-info {
+    flex: 1;
+  }
+
+  &__kpi-title {
+    font-size: 0.9rem;
+    color: $color-text-secondary;
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+  }
+
+  &__kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $color-text-primary;
+    margin: 0;
+    line-height: 1;
+  }
+
+  &__charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  &__chart {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &__chart-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $color-text-primary;
+    margin-bottom: 1.5rem;
+  }
+
+  &__chart-container {
+    height: 300px;
+    position: relative;
+  }
+
+  &__activity {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &__activity-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $color-text-primary;
+    margin-bottom: 1.5rem;
+  }
+
+  &__activity-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  &__activity-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: $color-bg-secondary;
+    border-radius: 8px;
+  }
+
+  &__activity-label {
+    font-size: 0.9rem;
+    color: $color-text-secondary;
+  }
+
+  &__activity-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-text-primary;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 1rem 0;
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__kpis {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    &__charts {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    &__chart-container {
+      height: 250px;
+    }
+
+    &__activity-stats {
+      grid-template-columns: 1fr;
+    }
+  }
+}

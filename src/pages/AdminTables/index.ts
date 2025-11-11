@@ -1,0 +1,1 @@
+export { AdminTables } from './AdminTables';

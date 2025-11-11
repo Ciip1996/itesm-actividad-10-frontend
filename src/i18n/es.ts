@@ -41,6 +41,7 @@ export const es: Translations = {
     email: "Correo Electrónico",
     password: "Contraseña",
     submit: "Iniciar Sesión",
+    googleSignIn: "Iniciar sesión con Google",
     noAccount: "¿No tienes cuenta?",
     registerHere: "Regístrate aquí",
   },

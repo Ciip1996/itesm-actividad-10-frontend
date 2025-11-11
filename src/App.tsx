@@ -13,8 +13,15 @@ import { PublicRoute } from "@/components/PublicRoute";
 import { Home } from "@pages/Home";
 import { Login } from "@pages/Login";
 import { Register } from "@pages/Register";
+import { AuthCallback } from "@pages/AuthCallback";
 import { Reservations } from "@pages/Reservations";
 import { NewReservation } from "@pages/NewReservation";
+// Admin pages
+import { AdminDashboard } from "@pages/AdminDashboard";
+import { AdminReservations } from "@pages/AdminReservations";
+import { AdminTables } from "@pages/AdminTables";
+import { AdminInsights } from "@pages/AdminInsights";
+import { AdminLayout } from "@/components/organisms/AdminLayout";
 import { Spinner } from "@atoms/Spinner";
 import { ROUTES } from "@config/index";
 import "./App.scss";
@@ -78,6 +85,14 @@ const AppRoutes: React.FC = () => {
             </PublicRoute>
           }
         />
+        <Route
+          path={ROUTES.AUTH_CALLBACK}
+          element={
+            <PublicRoute>
+              <AuthCallback />
+            </PublicRoute>
+          }
+        />
 
         {/* Protected Routes */}
         <Route
@@ -96,6 +111,14 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* Admin Routes */}
+        <Route path={ROUTES.ADMIN} element={<AdminLayout />}>
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+          <Route path={ROUTES.ADMIN_RESERVATIONS} element={<AdminReservations />} />
+          <Route path={ROUTES.ADMIN_TABLES} element={<AdminTables />} />
+          <Route path={ROUTES.ADMIN_INSIGHTS} element={<AdminInsights />} />
+        </Route>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />

@@ -127,7 +127,7 @@ export interface CheckAvailabilityDTO {
  * Generate report DTO
  */
 export interface GenerateReportDTO {
-  tipo_reporte: "insights_ia" | "reservaciones" | "ocupacion";
+  tipo_reporte: "insights_ia" | "ocupacion_diaria" | "reporte_completo";
   fecha_desde: string;
   fecha_hasta: string;
 }
@@ -163,10 +163,20 @@ export interface ReportResponse {
  * Dashboard stats interface
  */
 export interface DashboardStats {
-  reservas_hoy: number;
-  ocupacion_actual: number;
-  reservas_pendientes: number;
-  ingresos_estimados: number;
+  today: {
+    fecha: string;
+    total_reservas: number;
+    reservas_confirmadas: number;
+    reservas_pendientes: number;
+    reservas_canceladas: number;
+    total_personas: number;
+  };
+  weekly: {
+    total_reservas: number;
+    reservas_confirmadas: number;
+    reservas_canceladas: number;
+    total_personas: number;
+  };
 }
 
 /**
@@ -185,6 +195,7 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signUp: (
     email: string,
     password: string,

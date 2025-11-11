@@ -4,6 +4,7 @@ import { Card } from "@atoms/Card";
 import { Button } from "@atoms/Button";
 import { Alert } from "@atoms/Alert";
 import { TextField } from "@molecules/FormField";
+import { GoogleButton } from "@molecules/GoogleButton";
 import { useAuth } from "@hooks/useAuth";
 import { useLanguage } from "@/i18n";
 import { getErrorMessage } from "@utils/error.utils";
@@ -12,7 +13,7 @@ import "./Login.scss";
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ export const Login: React.FC = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Get the route user was trying to access before login
@@ -46,9 +48,23 @@ export const Login: React.FC = () => {
       navigate(from, { replace: true });
     } catch (err) {
       setError(getErrorMessage(err, t));
-      setLoading(false);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setGoogleLoading(true);
+
+    try {
+      await signInWithGoogle();
+      // Note: The navigation will happen automatically after the Google OAuth redirect
+      // and the auth state change
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -99,6 +115,18 @@ export const Login: React.FC = () => {
                 {t.login.submit}
               </Button>
             </form>
+
+            <div className="login__divider">
+              <div className="login__divider-line"></div>
+              <span className="login__divider-text">O</span>
+              <div className="login__divider-line"></div>
+            </div>
+
+            <GoogleButton
+              onClick={handleGoogleSignIn}
+              loading={googleLoading}
+              fullWidth
+            />
 
             <div className="login__footer">
               <p className="login__footer-text">
